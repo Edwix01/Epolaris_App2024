@@ -125,9 +125,10 @@ def mon_cpu(datos):
     return sal
 # Crear el diccionario
 
-diccionario_resultante = leer_cpu.crear_diccionario_host_marca("dispositivos.yaml")
+diccionario_resultante = leer_cpu.crear_diccionario_host_marca("/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml")
 
 while True:
     salcpu = mon_cpu(diccionario_resultante)
+    print(salcpu)
     wrinfluxcpu.wr_influx(salcpu)
     time.sleep(600)
