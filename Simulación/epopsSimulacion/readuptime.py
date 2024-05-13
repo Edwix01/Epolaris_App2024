@@ -5,9 +5,6 @@ client = InfluxDBClient(host='127.0.0.1', port=8086, database='influx')
 
 
 
-# Lista de direcciones IP de los agentes que deseas consultar
-agentes = ['10.0.1.1','10.0.1.2','10.0.1.3','10.0.1.4','10.0.1.5']
-
 def con_uptime(agentes):
     infuptime = {}
     for agente in agentes:
@@ -24,4 +21,3 @@ def con_uptime(agentes):
     client.close()
     return infuptime
 
-print(con_uptime(agentes))

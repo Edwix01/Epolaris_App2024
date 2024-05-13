@@ -13,9 +13,6 @@ import readuptime
 direc = ["10.0.1.1","10.0.1.2","10.0.1.3","10.0.1.4","10.0.1.5"]
 comunidad = "public"
 
-
-
-
 def verificar_hosts(direcciones_ips):
     """
     Verifica si los hosts en la lista de direcciones IP están activos.
@@ -24,7 +21,6 @@ def verificar_hosts(direcciones_ips):
     f = 0
     hosts_activos = []
     hosts_inactivos = []
-
     for ip in direcciones_ips:
         respuesta = ping3.ping(ip, timeout=3)  # Timeout de 1 segundo
         if respuesta is not None:
@@ -33,10 +29,10 @@ def verificar_hosts(direcciones_ips):
             print(f"{ip} está inactivo.")
             hosts_inactivos.append(ip)
             f=1
-
     return hosts_activos,hosts_inactivos,f
+
 def mon_int(direc):
-    a = []
+    l_int = []
     f = 0
     fif = []
     for server_ip in direc:
@@ -49,12 +45,10 @@ def mon_int(direc):
         if errorIndication != None:
            f = 1
            fif.append(server_ip)
-        for varBindTableRow in varBindTable:
-            for name, val in varBindTableRow:
-                #if int(val) <= -1:
-                #  print("La Topologia Cambio")
-                a.append(str(val))
-    return a,f,fif
+        else:
+           l_int = list(map(lambda x: ((x[0][1]).prettyPrint()),varBindTable))
+
+    return l_int,f,fif
 
 # Lista de direcciones IP para verificar
 #Contadores de Control
@@ -152,9 +146,7 @@ while True:
 
     #%%%%Seccion para monitoreo de Reinicio del Equipo%%%%%%%%%%%%%%%%%%%%
     infuptime = readuptime.con_uptime(list(eaping))
-    print(dicpu)
     for i in infuptime.keys():
-        print(i)
         if (infuptime[i] <= 35000) and (dicpu[i] == 0) :
             teleg.enviar_mensaje("EL dispositivo" + str(i) + " se reinicio")
             dicpu[i] = 1

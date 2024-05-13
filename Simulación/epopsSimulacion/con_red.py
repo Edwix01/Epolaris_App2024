@@ -12,7 +12,6 @@ def id_red(con):
     conexredun  = {}
     conexredu1  = {}
 
-
     for i in lista:
         a = lista.count(i)
         if a >= 2:
@@ -20,11 +19,5 @@ def id_red(con):
         if a <= 1:
            conexredu1[str(i)] = ""
 
+
     return list(conexredun.keys()),list(conexredu1.keys())
-
-
-"""
-cone = [('10.0.1.2-2', '10.0.1.1-2'), ('10.0.1.2-4', '10.0.1.1-3'), ('10.0.1.2-3', '10.0.1.3-2'), ('10.0.1.3-3', '10.0.1.4-2'), ('10.0.1.4-3', '10.0.1.5-2'), ('10.0.1.5-3', '10.0.1.6-2'), ('10.0.1.5-4', '10.0.1.6-4')]
-
-print(id_red(cone))
-"""

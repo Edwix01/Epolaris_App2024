@@ -3,13 +3,14 @@ from pysnmp.entity.rfc3413.oneliner import cmdgen
 cmdGen = cmdgen.CommandGenerator()
 
 
-
-
-def bri_id(ips,comunidad):
-    f = 0
+def bri_id(ips,datos):
     a = {}
-    fif = {} 
+    f = 0
+    fif = []
+
+   
     for server_ip in ips:
+        comunidad = datos[server_ip]["snmp"]
         errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.bulkCmd(
             cmdgen.CommunityData(comunidad),
             cmdgen.UdpTransportTarget((server_ip, 161)),
