@@ -1,0 +1,11 @@
+datos_vlan:
+  hosts:
+    switch1:
+      host: 10.0.1.5
+  vars:
+    marca: HPV1910
+    id: '209'
+    name_vlan: prueba
+    device_type: device0
+    usuario: networking
+    contrasena: Ygvfe34a.2018

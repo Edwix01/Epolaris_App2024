@@ -1,0 +1,2 @@
+configure
+snmp-server community prueba1 read-only
