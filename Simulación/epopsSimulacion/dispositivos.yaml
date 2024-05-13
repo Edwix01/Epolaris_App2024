@@ -1,0 +1,16 @@
+switches_cisco:
+  hosts:
+    switch1:
+      epops_host: 10.0.1.1
+    switch2:
+      epops_host: 10.0.1.2
+    switch3:
+      epops_host: 10.0.1.3
+    switch4:
+      epops_host: 10.0.1.4
+    switch5:
+      epops_host: 10.0.1.5
+  vars:
+    epops_user: networking
+    epops_ssh_pass: Ygvfe34a.2018
+    epops_snmp: public
