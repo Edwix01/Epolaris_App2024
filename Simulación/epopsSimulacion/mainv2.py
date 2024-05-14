@@ -18,7 +18,7 @@ import loadbalance
 print("Ejecutando Fase 1 - Lectura de Archivo de Configuraciones")
 #Fase 1
 #Lectura de Archivo Yaml - Configuraciones
-nombreyaml = "/home/edwin/Documents/Automatizacion_Red_2024/Epops/inventarios/dispositivos.yaml"
+nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
 datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
 #iptp,credenciales = obt_tplink.filtplink(nombreyaml)

@@ -104,7 +104,7 @@ def mon_cpu(datos):
                 oid = '1.3.6.1.4.1.9.2.1.58'
         
         errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.bulkCmd(
-            cmdgen.CommunityData('$1$5.v/c/$'),
+            cmdgen.CommunityData('public'),
             cmdgen.UdpTransportTarget((server_ip, 161)),
             0,25,
             oid
@@ -131,4 +131,4 @@ while True:
     salcpu = mon_cpu(diccionario_resultante)
     print(salcpu)
     wrinfluxcpu.wr_influx(salcpu)
-    time.sleep(600)
+    time.sleep(300)
