@@ -6,7 +6,7 @@ cmdGen = cmdgen.CommandGenerator()
 def bri_id(ips,datos):
     a = {}
     f = 0
-    fif = []
+    fif = {}
 
    
     for server_ip in ips:

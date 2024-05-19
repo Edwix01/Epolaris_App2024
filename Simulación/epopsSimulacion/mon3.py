@@ -10,7 +10,7 @@ import obt_infyam
 import dtsnmp
 import readuptime
 
-nombreyaml = "/home/du/Automatizacion_Red_2024/Epops/inventarios/dispositivos.yaml"
+nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
 datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
 comunidad = datos[list(direc)[0]]["snmp"]
@@ -110,7 +110,7 @@ while True:
                 diint[i] += 1
     #---------------------------------------
        print("Se bajo conexión")
-       time.sleep(5)
+       time.sleep(2)
        eaping,inactivos,fp = verificar_hosts(direc)
 
 
@@ -168,7 +168,7 @@ while True:
         epint: estado pasado: Lista con estado de las interfaces de los dispositivos
     """
 
-    if c == 5 :
+    if c == 2 :
         ci += 1
         c = 0
         if faux == 0:
@@ -190,7 +190,7 @@ while True:
     """
 
     if fp == 1:
-        time.sleep(20)
+        time.sleep(2)
         dfsnmp =[]
         print("Se ejecuto el descubrimiento de Interfaces")
         #print(enr)
@@ -278,5 +278,5 @@ while True:
     cp = ca
     c+=1
     wrinflux.wr_influx(diint)
-    time.sleep(10)  # Pausa la ejecución durante 1 segundo
+    time.sleep(5)  # Pausa la ejecución durante 1 segundo
 

@@ -47,9 +47,10 @@ def warning_cpu(vn,datacpu):
 
     Parámetros:
     datacpu(dict) :  Diccionario con los datos de consumo de cpu por dispositivo
+    vn(int):         Valor Referencial de Consumo Normal 
 
     Returns:
-    none
+    none:             Envia advertencia 
     """
 
 
@@ -77,14 +78,14 @@ def warning_cpu(vn,datacpu):
 
         teleg.enviar_mensaje(detalles)
 
-        
 
 
-#Pruebas de Funcionamiento
-nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
-datos = obt_infyam.infyam(nombreyaml)
-direc = datos.keys()
-while True:
-    datacpu = obt_cpudata(direc)
-    warning_cpu(10,datacpu)
-    time.sleep(60*30) #Configurado para 30 minutos
+
+# #Pruebas de Funcionamiento
+# nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
+# datos = obt_infyam.infyam(nombreyaml)
+# direc = datos.keys()
+# while True:
+#     datacpu = obt_cpudata(direc)
+#     warning_cpu(10,datacpu)
+#     time.sleep(60*30) #Configurado para 30 minutos

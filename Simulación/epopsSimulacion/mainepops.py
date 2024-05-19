@@ -20,7 +20,7 @@ def main_top(direc):
     #print("Ejecutando Fase 1 - Lectura de Archivo de Configuraciones")
     #Fase 1
     #Lectura de Archivo Yaml - Configuraciones
-    nombreyaml = "/home/du/Automatizacion_Red_2024/Epops/inventarios/dispositivos.yaml"
+    nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
     datos = obt_infyam.infyam(nombreyaml)
     iptp,credenciales = obt_tplink.filtplink(nombreyaml)
     b_root = obt_root.obtr(datos,iptp)
@@ -33,18 +33,18 @@ def main_top(direc):
     
     b_id,f1,fif1= bridge_id.bri_id(direc,datos)
     st_inf,f2,fif2 = stp_info.stp_inf(direc,datos)
-
+    """
     #Proceso extra para conmutadores TPLINK
 
     f.epmiko(credenciales[iptp[0]]["usuario"],credenciales[iptp[0]]["contraseña"], iptp)
     tp_d = leer.fil_bid("b_id.txt")
     stn = tp_linkssh.tplink_id(b_root,st_inf,tp_d,iptp)
-
+    """
 
     #print("Ejecutando Fase 3 - Identificacion de Conexiones")
     #Fase 3
     #Identificación de Conexiones
-    l = com_conex.b_conex(direc,b_id,stn)
+    l = com_conex.b_conex(direc,b_id,st_inf)
     #print(l)
     #Mapeo de Las etiquetas
     info_int,f3,fif3 = map_int.ma_int(direc,datos)
@@ -56,7 +56,7 @@ def main_top(direc):
     #print(nodb)
     ff = f1 or f2 or f3 or f4
     fif = dtsnmp.snmt(fif1,fif2,fif3,fif4)
-
+    """
     #Fase 4 - Despligue del arbol en la web
     #print("Ejecutando Fase 4 - Despliegue del Arbol")
 
@@ -78,4 +78,5 @@ def main_top(direc):
     TOPOLOGY_DICT = tree.generate_topology_json(discovered_hosts, interconnections,b_root,conexiones_blok, info_disp)
     tree.write_topology_file(TOPOLOGY_DICT,TOPOLOGY_FILE_HEAD,TOPOLOGY_FILE_PATH)
     print("------------FIN----------")
+    """
     return l,ff,fif

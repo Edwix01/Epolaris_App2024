@@ -14,6 +14,7 @@ import obt_root
 import bridge_id_root
 import tree
 import loadbalance
+import war_disp
 
 print("Ejecutando Fase 1 - Lectura de Archivo de Configuraciones")
 #Fase 1
@@ -43,36 +44,35 @@ print("Ejecutando Fase 3 - Identificacion de Conexiones")
 #Fase 3
 #Identificación de Conexiones
 l = com_conex.b_conex(direc,b_id,st_inf)
-
-print(l)
 # #Mapeo de Las etiquetas
 info_int = map_int.ma_int(direc,datos)
 
-print(info_int[0])
 nf = verstp.obtener_numeros_despues_del_punto(l)
 # print(nf)
 nodb=stp_blk.stp_status(direc,nf,datos)
-print("Puertos Bloqueados")
-print(nodb[0])
 
-inicio = time.time()
-loadbalance.ob_yaml(l,nodb[0],info_int[0])
-fin = time.time()
-print(fin-inicio)
+
+#loadbalance.ob_yaml(l,nodb[0],info_int[0])
+
 
 
 
 # #Fase 4 - Despligue del arbol en la web
 # print("Ejecutando Fase 4 - Despliegue del Arbol")
 
-# bridge_id_root_dis =  bridge_id_root.obtener_bridge_id_root_switch(direc, datos)
-# #print(bridge_id_root_dis)
-# root_bridge_id = bridge_id_root.obtener_bridge_id_root(bridge_id_root_dis)
-# #print(root_bridge_id)
+#bridge_id_root_dis =  bridge_id_root.obtener_bridge_id_root_switch(direc, datos)
+
+#root_bridge_id = bridge_id_root.obtener_bridge_id_root(bridge_id_root_dis)
+
 # b_root = bridge_id_root.encontrar_ip_por_bridge_id(b_id,root_bridge_id) 
 
 # bloq_int=tree.identificar_interfaces_bloqueadas(nodb, info_int)
-# interconnections = tree.connection_tree_web(l,info_int)
+interconnections = tree.connection_tree_web(l,info_int[0])
+inicio = time.time()
+interconx = war_disp.iden_disp_conec(l,interconnections,"10.0.1.1")
+war_disp.prevención_corte(direc,interconx)
+fin = time.time()
+print(fin-inicio)
 # conexiones_blok = tree.marcar_puertos_bloqueados(interconnections, bloq_int)
 # info_disp = tree.obtener_informacion_dispositivos(direc,datos)
 # discovered_hosts = tree.generate_switch_names(direc)
