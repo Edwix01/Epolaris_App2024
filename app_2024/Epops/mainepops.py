@@ -20,7 +20,7 @@ def main_top(direc):
     #print("Ejecutando Fase 1 - Lectura de Archivo de Configuraciones")
     #Fase 1
     #Lectura de Archivo Yaml - Configuraciones
-    nombreyaml = "/home/du/app_2024/Epops/inventarios/dispositivos.yaml"
+    nombreyaml = "/home/du/Prototipo_App2024/app_2024/Epops/inventarios/dispositivos.yaml"
     datos = obt_infyam.infyam(nombreyaml)
     iptp,credenciales = obt_tplink.filtplink(nombreyaml)
     b_root,froot,fifroot = obt_root.obtr(datos,iptp)
