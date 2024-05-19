@@ -10,7 +10,7 @@ import obt_infyam
 import dtsnmp
 import readuptime
 
-nombreyaml = "/home/du/app_2024/Epops/inventarios/dispositivos.yaml"
+nombreyaml = "/home/du/Prototipo_App2024/app_2024/Epops/inventarios/dispositivos.yaml"
 datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
 comunidad = datos[list(direc)[0]]["snmp"]
