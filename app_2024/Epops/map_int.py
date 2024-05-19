@@ -3,7 +3,18 @@ import re
 cmdGen = cmdgen.CommandGenerator()
 
 def ma_int(direc,datos):
-    d2 = {}
+    """
+    Funcion para obtener los nombres de las interfaces de un Switch
+
+    Parameters:
+    direc(list):    Lista con direcciones IP 
+    datos(dict):    Informacion de los dispositivos
+
+    Return:
+    info_interfaces(dict): Diccionario con las interfaces de cada uno de los swithches
+    """
+    
+    info_interfaces = {}
     f=0
     fif=[]
     for server_ip in direc:
@@ -32,7 +43,7 @@ def ma_int(direc,datos):
                     else:
                         d1[str(c)] = cadena[0] + numeros
                     c+=1
-        d2[str(server_ip)] = d1
-    return d2,f,fif
+        info_interfaces[str(server_ip)] = d1
+    return info_interfaces,f,fif
 
 

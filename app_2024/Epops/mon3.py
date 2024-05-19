@@ -21,6 +21,15 @@ def verificar_hosts(direcciones_ips):
     """
     Verifica si los hosts en la lista de direcciones IP están activos.
     Elimina de la lista los hosts inactivos y devuelve la lista actualizada.
+
+    Parameters:
+    direcciones_ips(list):      Direcciones IP de los switch a consultar estado
+
+    Return:
+    hosts_activos(list):        Direcciones IP de equipos activos
+    hosts_inactivos(list):      Direcciones IP de equipos inactivos
+    f(int):                     Bandera para detectar que se perdio la conexiòn con algun equipo
+
     """
     f = 0
     hosts_activos = []
@@ -36,8 +45,20 @@ def verificar_hosts(direcciones_ips):
             f=1
 
     return hosts_activos,hosts_inactivos,f
+
 def mon_int(direc):
-    a = []
+    """
+    Permite consultar el estado de las interfaces de los equipos
+
+    Parameters:
+    direc(list):
+
+    Return:
+    info_int_disp(list):    Estado de las interfaces de los equipos
+    f(int):                 Bandera para detectar probleams en la consulta SNMP
+    fif(list):              Dispositivos que tuvieron problemas con la consulta SNMP
+    """
+    info_int_disp = []
     f = 0
     fif = []
     for server_ip in direc:
@@ -54,12 +75,15 @@ def mon_int(direc):
             for name, val in varBindTableRow:
                 #if int(val) <= -1:
                 #  print("La Topologia Cambio")
-                a.append(str(val))
-    return a,f,fif
+                info_int_disp.append(str(val))
+    return info_int_disp,f,fif
 
 # Lista de direcciones IP para verificar
 #Contadores de Control
-ci = 0
+#Control de reincio de interrupciones
+ci = 0 
+
+#Control de monitoreo de Interfaces
 c = 0
 
 #Listas con estados de interfaces y de dispositivos
@@ -80,14 +104,18 @@ disnmp = {clave: 0 for clave in direc}
 dicpu = {clave: 0 for clave in direc}
 
 
-teleg.enviar_mensaje("INICIANDO SISTEMA \n")
+teleg.enviar_mensaje("----- Iniciando Sistema de Monitereo -----\n")
 while True:
+    """
+    Bucle principal para mantener un monitoreo cada 10 Segundos
+    """
+    #Banderas para controlar errores 
     fsnmp = 0
     fsi = 0
     fping = 0 
-    diesnmp = []
     faux = 0
     fp = 0
+    diesnmp = []
     infuptime = {} #Diccionario con Tiempos de Actividad
     print("Monitoreando")
 
@@ -101,7 +129,7 @@ while True:
     print(epping)
     eaping,inactivos,fping = verificar_hosts(direc)
     #print(diest)
-    #Perdido de Conexion Mayor a 10seg
+    #Perdido de Conexion Mayor a 5seg
     if fping == 1:
     #Proceso para contar interrumpciones rapidas
        for i in inactivos:
@@ -110,7 +138,7 @@ while True:
                 diint[i] += 1
     #---------------------------------------
        print("Se bajo conexión")
-       time.sleep(5)
+       time.sleep(5) #Se espera 5 segundos para consultar nuevamente el estado del switch
        eaping,inactivos,fp = verificar_hosts(direc)
 
 
@@ -118,17 +146,19 @@ while True:
     for x in direc:
         if dinac[x] >= 4:
             teleg.enviar_mensaje("Se ha tenido Varias interrumpciones con el dispositivo: "+x)
+            #Reinicio del Contador de Interrupciones del equipo Notificado
             dinac[x] = 0
 
     #---------------------------------------
 
     #print(dinac)
-    if ci == 10:
+    if ci == 10: #En caso de que haya pasado X tiempo restablece el contador de interrupciones
         dinac = {clave: 0 for clave in direc}
+        #Reinicio Contador
         ci = 0
 
     print(eaping)
-    print("------------------------------------------------------------------------------------")
+    print("-"*50)
     print("")
 
     if eaping != epping:
@@ -167,11 +197,10 @@ while True:
         eaint: estado actual: Lista con estado de las interfaces de los dispositivos
         epint: estado pasado: Lista con estado de las interfaces de los dispositivos
     """
-
     if c == 5 :
         ci += 1
         c = 0
-        if faux == 0:
+        if faux == 0: #En caso de no existieron eventos en el monitoreo por ping
         # print(epint)
             eaint,fsi,diesnmp = mon_int(list(eaping))
         # print(eaint)
@@ -191,7 +220,7 @@ while True:
 
     if fp == 1:
         time.sleep(20)
-        dfsnmp =[]
+        dfsnmp =[] #Lista con direcciones IP de todos los equipos con problemas en la consulta snmp
         print("Se ejecuto el descubrimiento de Interfaces")
         #print(enr)
         #print(enr1)
@@ -203,7 +232,7 @@ while True:
         print("")
         print("-------------------disnp,fsnmp,fsi----Control de error de snmp-----------------------")
         print(disnmp,fsnmp,fsi)
-        print("------------------------------------------------------------------------------------")
+        print("-"*50)
         print("")
         #print("-"*20)
         #Control de fallas de conexiones con SNMP
@@ -212,9 +241,10 @@ while True:
                 if disnmp[i] == 0:
                     dinac[i] += 1
                     diint[i] += 1
-                    disnmp[i] = 1
-                    teleg.enviar_mensaje("Error de la conexion snmp: " + str(i))
+                    disnmp[i] = 1 #Bandera de errores en SNMP
+                    teleg.enviar_mensaje("Error en la consulta SNMP: " + str(i))
         else:
+            #Restablece la bandera de errores SNMP
             disnmp = {clave: 0 for clave in direc}
         #-----------------------------
         if cp == ca:
@@ -278,5 +308,5 @@ while True:
     cp = ca
     c+=1
     wrinflux.wr_influx(diint)
-    time.sleep(10)  # Pausa la ejecución durante 1 segundo
+    time.sleep(10)  # Pausa la ejecución durante 10 segundos
 

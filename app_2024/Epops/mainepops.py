@@ -23,7 +23,7 @@ def main_top(direc):
     nombreyaml = "/home/du/app_2024/Epops/inventarios/dispositivos.yaml"
     datos = obt_infyam.infyam(nombreyaml)
     iptp,credenciales = obt_tplink.filtplink(nombreyaml)
-    b_root = obt_root.obtr(datos,iptp)
+    b_root,froot,fifroot = obt_root.obtr(datos,iptp)
 
 
     #print("Ejecutando Fase 2 - Almacenamiento de Datos")

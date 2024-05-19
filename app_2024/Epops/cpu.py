@@ -38,13 +38,17 @@ def interactive_send_command(channel, command, confirmation_text, response, wait
     return channel.recv(9999).decode('utf-8')
 
 
-#########################################################################
-#----------------------------#COMANDOS 3COM#-----------------------------
-#########################################################################
-#-----------------------SNMP CONFIGURCION------------------------------->
 def comcpu(ip, username, password):
     """
-    Función para configurar SNMP en un dispositivo 3Com utilizando Paramiko.
+    Función para leer datos de CPU de un switch 3Comm.
+
+    Parameters
+    ip(str):           Dirección IP
+    username(str):     Nombre de Usuario SSH
+    password(str):     Nombre de Usuario SSH
+
+    Return
+    v(int):            Valor de Consumo de CPU
     """
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -85,6 +89,15 @@ def comcpu(ip, username, password):
 #----------------------------STP CONFIGURACION------------------------------>
 
 def mon_cpu(datos):
+    """
+    Funcion para Obtener consumo de CPU de los ultimos 5min
+
+    Parameters:
+    datos(dict):    Diccionario con información de los dispositivos
+    
+    Return:
+    sal(dict):      Diccionario con el consumo de cpu por dispositivo
+    """
     sal = {}
     direc = datos.keys()
     for server_ip in direc:
@@ -104,7 +117,7 @@ def mon_cpu(datos):
                 oid = '1.3.6.1.4.1.9.2.1.58'
         
         errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.bulkCmd(
-            cmdgen.CommunityData('$1$5.v/c/$'),
+            cmdgen.CommunityData(datos[server_ip]["snmp"]),
             cmdgen.UdpTransportTarget((server_ip, 161)),
             0,25,
             oid

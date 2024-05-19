@@ -2,6 +2,14 @@ import yaml
 
 def infyam(nombre):
 # Cargar el archivo YAML
+    """
+    Funcion para leer los datos de un archivo yaml
+    Parameters:
+    nombre(str):      Ruta del archivo yaml
+
+    Return:       
+    credenciales_switches(dict):    Diccionario con información de los switches
+    """
     with open(nombre, "r") as archivo:
            datos = yaml.safe_load(archivo)
     # Inicializar un diccionario para almacenar las credenciales SSH y la comunidad SNMP

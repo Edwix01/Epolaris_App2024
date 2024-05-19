@@ -1,4 +1,14 @@
 def fil_bid(nombre):
+    """
+    Función para filtrar la informacion de b_id.txt
+    Se obtiene el bridge ID de dispositivos TPLink
+
+    Parameters:
+    nombre(str):    Ruta del archivo b_id.txt
+
+    Return:
+    bid(dict):      Diccionario con los bridge ID
+    """
     file_name = nombre
     # Variables para almacenar la dirección del puente designado
     direccion_designated_bridge = None
