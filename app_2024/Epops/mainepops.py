@@ -73,7 +73,7 @@ def main_top(direc):
     discovered_hosts = tree.generate_switch_names(direc)
 
     OUTPUT_TOPOLOGY_FILENAME = 'topology.js'
-    TOPOLOGY_FILE_PATH = r"/home/du/app_2024/src/public/js/topology.js"
+    TOPOLOGY_FILE_PATH = r"/home/du/Prototipo_App2024/app_2024/src/public/js/topology.js"
     TOPOLOGY_FILE_HEAD = f"\n\nvar topologyData = "
     TOPOLOGY_DICT = tree.generate_topology_json(discovered_hosts, interconnections,b_root,conexiones_blok, info_disp)
     tree.write_topology_file(TOPOLOGY_DICT,TOPOLOGY_FILE_HEAD,TOPOLOGY_FILE_PATH)
