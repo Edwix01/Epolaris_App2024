@@ -21,7 +21,6 @@ print("Ejecutando Fase 1 - Lectura de Archivo de Configuraciones")
 #Lectura de Archivo Yaml - Configuraciones
 nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
 datos = obt_infyam.infyam(nombreyaml)
-print(datos)
 direc = datos.keys()
 #iptp,credenciales = obt_tplink.filtplink(nombreyaml)
 #b_root = obt_root.obtr(datos,iptp)

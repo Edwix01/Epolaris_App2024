@@ -7,8 +7,6 @@ def bri_id(ips,datos):
     a = {}
     f = 0
     fif = {}
-
-   
     for server_ip in ips:
         comunidad = datos[server_ip]["comunidad_snmp"]
         errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.bulkCmd(

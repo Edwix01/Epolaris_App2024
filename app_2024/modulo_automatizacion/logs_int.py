@@ -9,12 +9,10 @@ def procesar_dispositivos_logs(datos_yaml):
         user = datos_yaml[grupo]['vars']['usuario']
         password = datos_yaml[grupo]['vars']['contrasena']
         device_type = datos_yaml[grupo]['vars']['device_type']
-       
-
+        
         for host, config in datos_yaml[grupo]['hosts'].items():
             ip = config['host']
             print(f"Configurando SNMP en {ip} para el dispositivo de marca {marca}...")
-
             # Diferenciar entre dispositivos usando marca
             if marca == '3COM':
                 # Usar Paramiko para dispositivos 3Com
@@ -44,3 +42,4 @@ def procesar_dispositivos_logs(datos_yaml):
                     connection.disconnect()
                 else:
                     print(f"No se pudo conectar al dispositivo {ip} con Netmiko.")
+

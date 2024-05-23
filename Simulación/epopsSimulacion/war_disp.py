@@ -1,5 +1,6 @@
 from collections import deque
 from collections import defaultdict
+import time
 import tree
 import teleg
 from influxdb import InfluxDBClient
@@ -188,3 +189,13 @@ def prevención_corte(direc,dic_conex):
             print(mesf)
 
 
+while True:
+    print("Monitoreando Interrupciones - Prevenciones de Enlaces")
+    with open('datos.txt', 'r') as archivo:
+        direc = eval(archivo.readline().strip())
+        l = eval(archivo.readline().strip())
+        interconections = eval(archivo.readline().strip())
+        broot =  str(archivo.readline().strip())
+        dic_cone = iden_disp_conec(l,interconections,broot)
+        prevención_corte(direc,dic_cone)
+    time.sleep(5)

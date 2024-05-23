@@ -13,7 +13,7 @@ import readuptime
 nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
 datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
-comunidad = datos[list(direc)[0]]["snmp"]
+comunidad = datos[list(direc)[0]]["comunidad_snmp"]
 
 
 

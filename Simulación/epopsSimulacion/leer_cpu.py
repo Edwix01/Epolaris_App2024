@@ -6,7 +6,7 @@ def crear_diccionario_host_marca(archivo):
         data = yaml.safe_load(file)
         for grupo, info_grupo in data.items():
             for host, info_host in info_grupo['hosts'].items():
-                diccionario[info_host['epops_host']] = grupo
+                diccionario[info_host['host']] = grupo
 
     return diccionario
 

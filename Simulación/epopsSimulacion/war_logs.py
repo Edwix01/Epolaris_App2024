@@ -5,7 +5,35 @@ import read_yaml
 import obt_infyam
 import time 
 import teleg
-import war_disp
+from influxdb import InfluxDBClient
+
+# Configurar la conexión a la base de datos InfluxDB
+client = InfluxDBClient(host='127.0.0.1', port=8086, database='influx')
+
+def leer_incidencias(agentes):
+    """
+    Funcion para obtener los datos de consumo de cpu por dispositvo. 
+    Retorna un valor promediado de consumo en los ultimos 30 min
+
+    Parámetros:
+    agentes (list): Lista con las direcciones IP de los dispositivos
+
+    Retunrs:
+    infcpuconsum (dict) :  Diccionario con el consumo por dispositivo
+    
+    """
+    infcpuconsum = {}
+
+    for agente in agentes:
+        query = f'SELECT last("interrupciones") FROM "interrumpciones" WHERE ("dispositivo" = \'{agente}\') AND time >= now() - 30m AND time <= now() fill(null)'
+        # Ejecutar la consulta para el agente actual
+        result = client.query(query)
+        for point in result.get_points():
+            infcpuconsum[agente] = (float(point["last"]))
+
+    # Cerrar la conexión
+    client.close()
+    return infcpuconsum
 
 def procesar_dispositivos_logs(datos_yaml,di_ip):
 
@@ -84,7 +112,7 @@ def prevención_corte_logs(direc):
     base_path = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios"
     archivo = os.path.join(base_path, "dispositivos.yaml")
     datos_yaml = read_yaml.cargar_datos_snmp(archivo)
-    interrupciones = war_disp.leer_incidencias(direc)
+    interrupciones = leer_incidencias(direc)
     #Generar Advertencia
     cabecera = "-----------------------Notificación---------------------------"
     tail = "-"*len(cabecera)
@@ -101,5 +129,6 @@ datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
 
 while True:
+    print("Se ejecuto")
     prevención_corte_logs(direc)
-    time.sleep(60*5)
+    time.sleep(10) #Tiempo de Simulacion 10seg - Tiempo Real 60*55
