@@ -14,13 +14,14 @@ import obt_root
 import bridge_id_root
 import tree
 import dtsnmp
-
+import os
 def main_top(direc):
     print("----------Inicio Descubriendo Topologia---------------")
     #print("Ejecutando Fase 1 - Lectura de Archivo de Configuraciones")
     #Fase 1
     #Lectura de Archivo Yaml - Configuraciones
-    nombreyaml = "/home/du/Prototipo_App2024/app_2024/Epops/inventarios/dispositivos.yaml"
+    current_dir = os.path.dirname(__file__)
+    nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
     datos = obt_infyam.infyam(nombreyaml)
     iptp,credenciales = obt_tplink.filtplink(nombreyaml)
     b_root,froot,fifroot = obt_root.obtr(datos,iptp)
@@ -36,7 +37,7 @@ def main_top(direc):
 
     #Proceso extra para conmutadores TPLINK
 
-    f.epmiko(credenciales[iptp[0]]["usuario"],credenciales[iptp[0]]["contraseña"], iptp)
+    f.epmiko(credenciales[iptp[0]]["usuario"],credenciales[iptp[0]]["contrasena"], iptp)
     tp_d = leer.fil_bid("b_id.txt")
     stn = tp_linkssh.tplink_id(b_root,st_inf,tp_d,iptp)
 
@@ -77,5 +78,5 @@ def main_top(direc):
     TOPOLOGY_FILE_HEAD = f"\n\nvar topologyData = "
     TOPOLOGY_DICT = tree.generate_topology_json(discovered_hosts, interconnections,b_root,conexiones_blok, info_disp)
     tree.write_topology_file(TOPOLOGY_DICT,TOPOLOGY_FILE_HEAD,TOPOLOGY_FILE_PATH)
-    print("------------FIN----------")
+    print("-------------------------------FIN-------------------------------------")
     return l,ff,fif

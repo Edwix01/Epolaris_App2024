@@ -1,4 +1,5 @@
 from netmiko import ConnectHandler
+import os
 import paramiko
 import time
 from pysnmp.entity.rfc3413.oneliner import cmdgen
@@ -138,7 +139,9 @@ def mon_cpu(datos):
     return sal
 # Crear el diccionario
 
-diccionario_resultante = leer_cpu.crear_diccionario_host_marca("/home/du/Automatizacion_Red_2024/Epops/inventarios/dispositivos.yaml")
+current_dir = os.path.dirname(__file__)
+nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
+diccionario_resultante = leer_cpu.crear_diccionario_host_marca(nombreyaml)
 
 while True:
     salcpu = mon_cpu(diccionario_resultante)

@@ -9,8 +9,10 @@ import teleg
 import obt_infyam
 import dtsnmp
 import readuptime
+import os 
 
-nombreyaml = "/home/du/Prototipo_App2024/app_2024/Epops/inventarios/dispositivos.yaml"
+current_dir = os.path.dirname(__file__)
+nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
 datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
 comunidad = datos[list(direc)[0]]["snmp"]

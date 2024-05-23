@@ -15,11 +15,13 @@ import obt_tplink
 import obt_root
 import bridge_id_root
 import tree
+import os
 
 print("Ejecutando Fase 1 - Lectura de Archivo de Configuraciones")
 #Fase 1
 #Lectura de Archivo Yaml - Configuraciones
-nombreyaml = "/home/du/Auto_Mon_2024_Cod/Automatizacion_Red_2024/epops/inventarios/dispositivos.yaml"
+current_dir = os.path.dirname(__file__)
+nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
 datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
 iptp,credenciales = obt_tplink.filtplink(nombreyaml)
