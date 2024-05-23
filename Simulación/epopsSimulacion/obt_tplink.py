@@ -14,11 +14,11 @@ def filtplink(nombre):
         configuracion_tplink = datos['switches_tplink']
         for switch, detalles in configuracion_tplink['hosts'].items():
             if 'epops_host' in detalles:
-                ip = detalles['epops_host']
+                ip = detalles['host']
                 ips_tplink.append(ip)
                 credenciales_tplink[ip] = {
-                    'usuario': configuracion_tplink['vars'].get('epops_user'),
-                    'contraseña': configuracion_tplink['vars'].get('epops_ssh_pass')
+                    'usuario': configuracion_tplink['vars'].get('user'),
+                    'contraseña': configuracion_tplink['vars'].get('ssh_pass')
                 }
 
     return ips_tplink, credenciales_tplink

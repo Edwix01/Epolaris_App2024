@@ -10,15 +10,15 @@ def infyam(nombre):
 
     # Obtener las credenciales SSH y la comunidad SNMP de todos los switches
     for categoria, configuracion in datos.items():
-        if categoria.startswith('switches_'):
-            marca = categoria.replace('switches_', '')  # Obtener la marca del switch
+        if categoria.startswith('switchs_'):
+            marca = categoria.replace('switchs_', '')  # Obtener la marca del switch
             for switch, detalles in configuracion['hosts'].items():
-                if 'epops_host' in detalles:
-                    ip = detalles['epops_host']
-                    usuario = configuracion['vars'].get('epops_user')
-                    contraseña = configuracion['vars'].get('epops_ssh_pass')
-                    snmp = configuracion['vars'].get('epops_snmp')
-                    credenciales_switches[ip] = {'marca': marca, 'usuario': usuario, 'contraseña': contraseña, 'snmp': snmp}
+                if 'host' in detalles:
+                    ip = detalles['host']
+                    usuario = configuracion['vars'].get('usuario')
+                    contraseña = configuracion['vars'].get('contrasena')
+                    snmp = configuracion['vars'].get('comunidad_snmp')
+                    credenciales_switches[ip] = {'marca': marca, 'usuario': usuario, 'contrasena': contraseña, 'comunidad_snmp': snmp}
 
 # Imprimir el diccionario de credenciales SSH y SNMP para todos los switches
     return credenciales_switches

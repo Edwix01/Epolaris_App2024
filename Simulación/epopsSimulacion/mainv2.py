@@ -21,6 +21,7 @@ print("Ejecutando Fase 1 - Lectura de Archivo de Configuraciones")
 #Lectura de Archivo Yaml - Configuraciones
 nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
 datos = obt_infyam.infyam(nombreyaml)
+print(datos)
 direc = datos.keys()
 #iptp,credenciales = obt_tplink.filtplink(nombreyaml)
 #b_root = obt_root.obtr(datos,iptp)
@@ -67,11 +68,19 @@ nodb=stp_blk.stp_status(direc,nf,datos)
 # b_root = bridge_id_root.encontrar_ip_por_bridge_id(b_id,root_bridge_id) 
 
 # bloq_int=tree.identificar_interfaces_bloqueadas(nodb, info_int)
+bbroot = "10.0.1.1"
 interconnections = tree.connection_tree_web(l,info_int[0])
 inicio = time.time()
-interconx = war_disp.iden_disp_conec(l,interconnections,"10.0.1.1")
-war_disp.prevención_corte(direc,interconx)
+interconx = war_disp.iden_disp_conec(l,interconnections,bbroot)
+
+# Escribe las variables en un archivo
+with open('datos.txt', 'w') as archivo:
+    archivo.write(f"{l}\n")
+    archivo.write(f"{interconnections}\n")
+    archivo.write(f"{bbroot}\n")
+    
 fin = time.time()
+
 print(fin-inicio)
 # conexiones_blok = tree.marcar_puertos_bloqueados(interconnections, bloq_int)
 # info_disp = tree.obtener_informacion_dispositivos(direc,datos)

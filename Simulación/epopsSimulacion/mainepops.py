@@ -56,6 +56,19 @@ def main_top(direc):
     #print(nodb)
     ff = f1 or f2 or f3 or f4
     fif = dtsnmp.snmt(fif1,fif2,fif3,fif4)
+
+    bbroot = "10.0.1.1"
+    interconnections = tree.connection_tree_web(l,info_int)
+
+
+    # Escribe las variables en un archivo
+    with open('datos.txt', 'w') as archivo:
+        archivo.write(f"{direc}\n")
+        archivo.write(f"{l}\n")
+        archivo.write(f"{interconnections}\n")
+        archivo.write(f"{bbroot}\n")
+    
+
     """
     #Fase 4 - Despligue del arbol en la web
     #print("Ejecutando Fase 4 - Despliegue del Arbol")

@@ -168,15 +168,16 @@ while True:
         epint: estado pasado: Lista con estado de las interfaces de los dispositivos
     """
 
-    if c == 2 :
+    if c >= 2 :
         ci += 1
         c = 0
         if faux == 0:
         # print(epint)
+            print("Verificacion : Interfaces")
             eaint,fsi,diesnmp = mon_int(list(eaping))
         # print(eaint)
         if eaint != epint:
-            print("Se comparo lista de interfaces - Listas Diferentes")
+            print("Verificacion : Interfaces - Listas Diferentes")
             fp = 1
         epint=eaint
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -190,7 +191,7 @@ while True:
     """
 
     if fp == 1:
-        time.sleep(2)
+        time.sleep(5)
         dfsnmp =[]
         print("Se ejecuto el descubrimiento de Interfaces")
         #print(enr)

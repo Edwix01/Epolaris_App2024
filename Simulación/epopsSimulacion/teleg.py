@@ -4,7 +4,7 @@ import telebot
 TOKEN = '6719870472:AAFerw5_cbcI1w_3kMqfqw963cwQYTIrcP8'
 
 # ID de chat al que quieres enviar el mensaje
-chat_id = -4179209636
+chat_id = 1418714303
 
 # Inicializar el bot con tu token
 bot = telebot.TeleBot(TOKEN)
@@ -16,4 +16,5 @@ def enviar_mensaje(message):
         print("Mensaje enviado exitosamente.")
     except Exception as e:
         print("Ocurrió un error al enviar el mensaje:", e)
+
 
