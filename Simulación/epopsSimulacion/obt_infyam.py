@@ -18,7 +18,7 @@ def infyam(nombre):
                     usuario = configuracion['vars'].get('usuario')
                     contraseña = configuracion['vars'].get('contrasena')
                     snmp = configuracion['vars'].get('comunidad_snmp')
-                    credenciales_switches[ip] = {'marca': marca, 'usuario': usuario, 'contrasena': contraseña, 'comunidad_snmp': snmp}
+                    credenciales_switches[ip] = {'marca': marca, 'usuario': usuario, 'contrasena': contraseña, 'snmp': snmp}
 
 # Imprimir el diccionario de credenciales SSH y SNMP para todos los switches
     return credenciales_switches

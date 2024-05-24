@@ -1,4 +1,5 @@
 from netmiko import ConnectHandler
+import obt_infyam
 import os
 import paramiko
 import time
@@ -89,7 +90,7 @@ def comcpu(ip, username, password):
         ssh.close()
 #----------------------------STP CONFIGURACION------------------------------>
 
-def mon_cpu(datos):
+def mon_cpu(info,datos):
     """
     Funcion para Obtener consumo de CPU de los ultimos 5min
 
@@ -104,14 +105,14 @@ def mon_cpu(datos):
     for server_ip in direc:
         print ("\nFetching stats for...", server_ip)
         match datos[server_ip]:
-            case "switches_tplink":
+            case "switchs_tplink":
                 oid ="1.3.6.1.4.1.11863.6.4.1.1.1.1.2"
-            case "switches_hp":
+            case "switchs_hp":
                 oid = "1.3.6.1.4.1.25506.2.6.1.1.1.1.6"
-            case "switches_3comm":
+            case "switchs_3comm":
                 sal[server_ip] = comcpu(server_ip,"networking","Ygvfe34a.2018")
                 continue
-            case "switches_cisco":
+            case "switchs_cisco":
                 
                 oid = '1.3.6.1.4.1.9.2.1.58'
             case _:
@@ -127,7 +128,7 @@ def mon_cpu(datos):
         for varBindTableRow in varBindTable:
             for name, val in varBindTableRow:
                 try:
-                    if datos[server_ip] == "switches_hp":
+                    if datos[server_ip] == "switchs_hp":
                         if float(val.prettyPrint())>0:
                             sal[server_ip] = val.prettyPrint()
                             print(val.prettyPrint())
@@ -142,8 +143,10 @@ def mon_cpu(datos):
 current_dir = os.path.dirname(__file__)
 nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
 diccionario_resultante = leer_cpu.crear_diccionario_host_marca(nombreyaml)
+diccionario_resultante = obt_infyam.infyam(nombreyaml)
+datos = obt_infyam.infyam(nombreyaml)
 
 while True:
-    salcpu = mon_cpu(diccionario_resultante)
+    salcpu = mon_cpu(datos,diccionario_resultante)
     wrinfluxcpu.wr_influx(salcpu)
     time.sleep(600)
