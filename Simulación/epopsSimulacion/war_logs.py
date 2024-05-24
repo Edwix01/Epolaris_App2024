@@ -129,6 +129,6 @@ datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
 
 while True:
-    print("Se ejecuto")
+    print("Monitoreando Interrupciones - Logs")
     prevención_corte_logs(direc)
     time.sleep(10) #Tiempo de Simulacion 10seg - Tiempo Real 60*55
