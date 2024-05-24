@@ -3,7 +3,7 @@ import teleg
 from influxdb import InfluxDBClient
 import numpy as np
 import time
-
+import os
 # Configurar la conexión a la base de datos InfluxDB
 client = InfluxDBClient(host='127.0.0.1', port=8086, database='influx')
 
@@ -96,7 +96,8 @@ def warning_cpu(vn,datacpu):
 
 
 #Pruebas de Funcionamiento
-nombreyaml = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios/dispositivos.yaml"
+current_dir = os.path.dirname(__file__)
+nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
 datos = obt_infyam.infyam(nombreyaml)
 direc = datos.keys()
 while True:
