@@ -72,7 +72,13 @@ def main_top(direc):
     conexiones_blok = tree.marcar_puertos_bloqueados(interconnections, bloq_int)
     info_disp = tree.obtener_informacion_dispositivos(direc,datos)
     discovered_hosts = tree.generate_switch_names(direc)
-
+        # Escribe las variables en un archivo
+    with open('variables.txt', 'w') as archivo:
+        archivo.write(f"{direc}\n")
+        archivo.write(f"{l}\n")
+        archivo.write(f"{interconnections}\n")
+        archivo.write(f"{b_root}\n")
+    
     OUTPUT_TOPOLOGY_FILENAME = 'topology.js'
     TOPOLOGY_FILE_PATH = r"/home/du/Prototipo_App2024/app_2024/src/public/js/topology.js"
     TOPOLOGY_FILE_HEAD = f"\n\nvar topologyData = "
