@@ -187,6 +187,30 @@ var topologyData = {
             "index": 1,
             "port_bloks": false,
             "port_blokt": false,
+            "source": 7,
+            "srcDevice": "10.0.1.8",
+            "srcIfName": "G1/0/39",
+            "target": 16,
+            "tgtDevice": "10.0.1.13",
+            "tgtIfName": "g1/0/24"
+        },
+        {
+            "id": 16,
+            "index": 1,
+            "port_bloks": false,
+            "port_blokt": false,
+            "source": 7,
+            "srcDevice": "10.0.1.8",
+            "srcIfName": "G1/0/17",
+            "target": 17,
+            "tgtDevice": "10.0.1.14",
+            "tgtIfName": "g1/0/24"
+        },
+        {
+            "id": 17,
+            "index": 1,
+            "port_bloks": false,
+            "port_blokt": false,
             "source": 13,
             "srcDevice": "10.0.1.17",
             "srcIfName": "G1/0/2",
@@ -195,7 +219,7 @@ var topologyData = {
             "tgtIfName": "G1/0/16"
         },
         {
-            "id": 16,
+            "id": 18,
             "index": 1,
             "port_bloks": false,
             "port_blokt": false,
@@ -340,7 +364,7 @@ var topologyData = {
             "IP": "10.0.1.13",
             "icon": "switch",
             "id": 16,
-            "layerSortPreference": 0,
+            "layerSortPreference": 3,
             "marca": "TPLINK-JetStream",
             "name": "SW_ME_RECO"
         },
@@ -348,7 +372,7 @@ var topologyData = {
             "IP": "10.0.1.14",
             "icon": "switch",
             "id": 17,
-            "layerSortPreference": 0,
+            "layerSortPreference": 3,
             "marca": "TPLINK-JetStream",
             "name": "SW_ME_RECO"
         }

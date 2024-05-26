@@ -216,6 +216,34 @@ var topologyData = {
             "id": 15,
             "index": 1,
             "is_dead": "no",
+            "is_new": "yes",
+            "port_bloks": false,
+            "port_blokt": false,
+            "source": 7,
+            "srcDevice": "10.0.1.8",
+            "srcIfName": "G1/0/39",
+            "target": 16,
+            "tgtDevice": "10.0.1.13",
+            "tgtIfName": "g1/0/24"
+        },
+        {
+            "id": 16,
+            "index": 1,
+            "is_dead": "no",
+            "is_new": "yes",
+            "port_bloks": false,
+            "port_blokt": false,
+            "source": 7,
+            "srcDevice": "10.0.1.8",
+            "srcIfName": "G1/0/17",
+            "target": 17,
+            "tgtDevice": "10.0.1.14",
+            "tgtIfName": "g1/0/24"
+        },
+        {
+            "id": 17,
+            "index": 1,
+            "is_dead": "no",
             "is_new": "no",
             "port_bloks": false,
             "port_blokt": false,
@@ -227,7 +255,7 @@ var topologyData = {
             "tgtIfName": "G1/0/16"
         },
         {
-            "id": 16,
+            "id": 18,
             "index": 1,
             "is_dead": "no",
             "is_new": "no",
@@ -239,34 +267,6 @@ var topologyData = {
             "target": 15,
             "tgtDevice": "10.0.1.19",
             "tgtIfName": "G1/0/5"
-        },
-        {
-            "id": 17,
-            "index": 1,
-            "is_dead": "yes",
-            "is_new": "no",
-            "port_bloks": false,
-            "port_blokt": false,
-            "source": 7,
-            "srcDevice": "10.0.1.8",
-            "srcIfName": "G1/0/39",
-            "target": 16,
-            "tgtDevice": "10.0.1.13",
-            "tgtIfName": "g1/0/24"
-        },
-        {
-            "id": 18,
-            "index": 1,
-            "is_dead": "yes",
-            "is_new": "no",
-            "port_bloks": false,
-            "port_blokt": false,
-            "source": 7,
-            "srcDevice": "10.0.1.8",
-            "srcIfName": "G1/0/17",
-            "target": 17,
-            "tgtDevice": "10.0.1.14",
-            "tgtIfName": "g1/0/24"
         }
     ],
     "nodes": [
@@ -436,7 +436,7 @@ var topologyData = {
             "id": 16,
             "is_dead": "no",
             "is_new": "no",
-            "layerSortPreference": 0,
+            "layerSortPreference": 3,
             "marca": "TPLINK-JetStream",
             "name": "SW_ME_RECO"
         },
@@ -446,19 +446,9 @@ var topologyData = {
             "id": 17,
             "is_dead": "no",
             "is_new": "no",
-            "layerSortPreference": 0,
+            "layerSortPreference": 3,
             "marca": "TPLINK-JetStream",
             "name": "SW_ME_RECO"
-        },
-        {
-            "IP": "10.0.1.12",
-            "icon": "dead_node",
-            "id": 18,
-            "is_dead": "yes",
-            "is_new": "no",
-            "layerSortPreference": 0,
-            "marca": "HP-V1910",
-            "name": "SW_ME_PINCHISANA"
         }
     ]
 };
