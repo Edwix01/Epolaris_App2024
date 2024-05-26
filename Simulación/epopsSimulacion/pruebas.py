@@ -1,14 +1,18 @@
+from datetime import datetime, timedelta
 import time
 
-while True:
-    # Variables que deseas compartir
-    valor1 = 42
-    valor2 = "Hola mundo"
+# Registrar la hora inicial
+start_time = datetime.now()
 
-    # Escribe las variables en un archivo
-    with open('datos.txt', 'w') as archivo:
-        archivo.write(f"{valor1}\n")
-        archivo.write(f"{valor2}\n")
+print(start_time)
 
-    # Espera 30 segundos antes de escribir de nuevo
-    time.sleep(30)
+# Calcular la hora objetivo (5 minutos después de la hora inicial)
+target_time = start_time + timedelta(minutes=1)
+
+print(target_time)
+# Bucle para esperar y comprobar si han pasado 5 minutos
+while datetime.now() < target_time:
+    print("Esperando que pasen 5 minutos...")
+    time.sleep(10)  # Dormir por 10 segundos antes de volver a verificar
+
+print("Han pasado 5 minutos")
