@@ -1,6 +1,6 @@
 .nav-color {
     /* Degradado azul suave */
-    background-image: linear-gradient(to right, #6dd5ed, #2193b0);
+    background-image: linear-gradient(to right, #6dd5ed, #52b4cc);
   }
   .nav-link, .logout-button {
     transition: background-color 0.2s, transform 0.2s;

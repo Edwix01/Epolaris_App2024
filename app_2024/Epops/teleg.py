@@ -4,7 +4,7 @@ import telebot
 TOKEN = '6719870472:AAFerw5_cbcI1w_3kMqfqw963cwQYTIrcP8' 
 
 # ID del chat donde se enviaran los mensajes
-chat_id = -4179209636
+chat_id = -4252331428
 
 bot = telebot.TeleBot(TOKEN)
 

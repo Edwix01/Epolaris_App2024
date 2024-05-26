@@ -2,7 +2,11 @@ const multer = require('multer');
 const yaml = require('js-yaml');
 const path = require('path');
 const fs = require('fs');
+const {existsSync, execSync} = require('child_process')
 
+/* ----------------------------------------------------------------------------------
+********************** FUNCION PARA SUBIR EL ARCHIVO YAML ***************************
+-----------------------------------------------------------------------------------*/
 
 // Configuración de Multer para archivos YAML
 const storageYAML = multer.diskStorage({
@@ -15,7 +19,7 @@ const storageYAML = multer.diskStorage({
   },
   filename: function(req, file, cb) {
       // Usar una combinación de marca de tiempo y el nombre original del archivo
-      const newName = "dispositivos1" + path.extname(file.originalname); // Asegúrate de añadir la extensión
+      const newName = "dispositivos" + path.extname(file.originalname); 
       cb(null, newName);
   }
 });
@@ -27,8 +31,12 @@ function uploadYAMLFile(req, res) {
   if (!req.file) {
     return res.status(400).send('No se subió ningún archivo.');
   }
-  res.json({ message: 'Archivo YAML subido con éxito!' });
+  res.json({ message: 'Archivo YAML subido exitosamente!' });
 }
+
+/* ----------------------------------------------------------------------------------
+********************** FUNCIONES PARA VISUALIZAR EN LA WEB **************************
+-----------------------------------------------------------------------------------*/
 
 function configure_archivo(req, res) {
   if (req.session.loggedin ){
@@ -47,6 +55,10 @@ function configure_ini(req, res) {
   }
       
 }
+
+/* ----------------------------------------------------------------------------------
+*************************** FUNCIONES DE COMPROBACION *******************************
+-----------------------------------------------------------------------------------*/
   
 function esIPValida(ip) {
   const regexIP = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -58,30 +70,48 @@ function esTipoDispositivoValido(tipo) {
   return tiposValidos.includes(tipo.toLowerCase());
 }
 
+/* -----------------------------------------------------------------------------------------
+********************** FUNCIONES ALMACENAR DATOS EN ARCHIVOS YAML **************************
+------------------------------------------------------------------------------------------*/
 
 function agregarDispositivo(dispositivo) {
-
+  /**
+   * Agrega un dispositivo a un archivo YAML de inventario.
+   *
+   * @param {Object} dispositivo - Objeto que representa el dispositivo a agregar.
+   * @param {string} dispositivo.ip - La dirección IP del dispositivo.
+   * @param {string} dispositivo.tipo_dispositivo - El tipo de dispositivo ('switch' o 'router').
+   * @param {string} dispositivo.marca - La marca del dispositivo.
+   * @param {string} dispositivo.user - El usuario del dispositivo.
+   * @param {string} dispositivo.password - La contraseña del dispositivo.
+   * @param {string} dispositivo.comunidad - La comunidad SNMP del dispositivo.
+   * @param {string} dispositivo.region - La región MSTP del dispositivo.
+   * @param {string} dispositivo.device_type - El tipo de dispositivo específico.
+   *
+   * @returns {Object} - Objeto con las propiedades `exito` (booleano) y `mensaje` (string) indicando el resultado de la operación.
+   */
+  
+  // Verifica si la dirección IP del dispositivo es válida
   if (!esIPValida(dispositivo.ip)) {
     console.log(`Error: La dirección IP ${dispositivo.ip} no es válida.`);
     return { exito: false, mensaje: `Error: La dirección IP ${dispositivo.ip} no es válida.` };
   }
+  // Define la ruta del archivo YAML de dispositivos
+  const archivoDispositivos = path.join(__dirname, '..','..','Epops', 'inventarios', 'dispositivos.yaml');
 
-  if (!esTipoDispositivoValido(dispositivo.tipo_dispositivo)) {
-    console.log(`Error: Tipo de dispositivo ${dispositivo.tipo_dispositivo} no permitido.`);
-    return { exito: false, mensaje: `Error: Tipo de dispositivo no permitido. Solo se aceptan 'switch' o 'router'.` };
-  }
-  
-  const archivoDispositivos = path.join(__dirname, '..','..','Epops', 'inventarios', 'dispositivos1.yaml');
-
+  // Si el archivo no existe, lo crea con una estructura vacía
   if (!fs.existsSync(archivoDispositivos)) {
     fs.writeFileSync(archivoDispositivos, yaml.dump({}), 'utf8');
   }
 
+  console.log('Received datos:', dispositivo);
+
   try {
+    // Carga el contenido del archivo YAML
     let estructuraYaml = yaml.load(fs.readFileSync(archivoDispositivos, 'utf8')) || {};
     let dispositivoExistente = null;
 
-    // Buscar si existe algún dispositivo con la misma IP
+    // Busca si ya existe un dispositivo con la misma IP
     for (const grupo in estructuraYaml) {
       for (const host in estructuraYaml[grupo].hosts) {
         if (estructuraYaml[grupo].hosts[host].host === dispositivo.ip) {
@@ -93,7 +123,7 @@ function agregarDispositivo(dispositivo) {
     }
 
     if (dispositivoExistente) {
-      // Si existe un dispositivo con la misma IP, verifica que tipo y modelo sean iguales
+      // Si el dispositivo existe, verifica que el tipo y la marca sean iguales
       if (dispositivoExistente.tipo === dispositivo.tipo_dispositivo &&
           dispositivoExistente.marca === dispositivo.marca) {
         // Actualiza los datos del dispositivo existente
@@ -103,7 +133,7 @@ function agregarDispositivo(dispositivo) {
         dispositivoExistente.region = dispositivo.region;
         dispositivoExistente.device_type = dispositivo.device_type;
         
-        // Guardar cambios en el archivo
+        // Guarda los cambios en el archivo
         fs.writeFileSync(archivoDispositivos, yaml.dump(estructuraYaml), 'utf8');
         console.log(`Se actualizaron los datos del dispositivo ${dispositivo.ip} como (${dispositivo.tipo_dispositivo}) y marca (${dispositivo.marca}).`);
         return { exito: true, mensaje: `Datos del dispositivo actualizados con éxito.` };
@@ -122,6 +152,7 @@ function agregarDispositivo(dispositivo) {
           password: dispositivo.password,
           comunidad_snmp: dispositivo.comunidad,
           region_mstp: dispositivo.region,
+          tipo: dispositivo.tipo_dispositivo,
           marca: dispositivo.marca,
           device_type: dispositivo.device_type,
         }};
@@ -132,44 +163,63 @@ function agregarDispositivo(dispositivo) {
       
       estructuraYaml[grupo].hosts[nuevaClave] = {
         host: dispositivo.ip,
-        
       };
 
       // Escribe el archivo YAML con la nueva estructura
       fs.writeFileSync(archivoDispositivos, yaml.dump(estructuraYaml), 'utf8');
       console.log(`Nuevo dispositivo agregado con la IP ${dispositivo.ip}.`);
       return { exito: true, mensaje: `Nuevo dispositivo agregado con la IP ${dispositivo.ip}.` };
-      
     }
   } catch (error) {
     console.error('Error al actualizar el archivo dispositivos.yaml:', error);
+    return { exito: false, mensaje: 'Error al actualizar el archivo dispositivos.yaml.' };
   }
 }
-
-
-function datosSNMP (datos){
-
-  console.log('Received datos:', datos);
+   
+function datosSNMP(datos) {
+  /**
+   * Almacena datos SNMP para una lista de dispositivos y los guarda en un archivo YAML.
+   *
+   * @param {Object} datos - Objeto que contiene la información de los dispositivos.
+   * @param {Array<string>} datos.ip - Lista de direcciones IP de los dispositivos.
+   * @param {string} datos.marca - La marca de los dispositivos.
+   * @param {string} datos.comunidad - La comunidad SNMP de los dispositivos.
+   * @param {string} datos.permisos - El permiso de escritura o lectura de la comunidad SNMP.
+   * @param {string} datos.id_list - Id del Access List permitido.
+   * @param {string} datos.device_type - El tipo de dispositivo específico.
+   * @param {string} datos.user - El usuario para acceder a los dispositivos.
+   * @param {string} datos.password - La contraseña para acceder a los dispositivos.
+   *
+   * @returns {Object} - Objeto con las propiedades `exito` (booleano) y `mensaje` (string) indicando el resultado de la operación.
+   */
   
+  // Imprime los datos recibidos en la consola para propósitos de debugging
+  console.log('Received datos:', datos);
+
+  // Filtra las direcciones IP no válidas
   const ipsInvalidas = datos.ip.filter(ip => !esIPValida(ip));
   if (ipsInvalidas.length > 0) {
     return { exito: false, mensaje: `Error: Las siguientes direcciones IP no son válidas: ${ipsInvalidas.join(', ')}` };
   }
-  
+
+  // Define la ruta del archivo YAML de datos SNMP
   const archivoDispositivos = path.join(__dirname, '..', '..', 'modulo_automatizacion', 'registros', 'datos_snmp.yaml');
-  // Aquí, asegúrate de que el archivo YAML existe o créalo con una estructura básica
+
+  // Si el archivo no existe, lo crea con una estructura básica
   if (!fs.existsSync(archivoDispositivos)) {
     fs.writeFileSync(archivoDispositivos, yaml.dump({ datos_snmp: { hosts: {} } }), 'utf8');
   }
 
   try {
+    // Carga el contenido del archivo YAML
     let estructuraYaml = yaml.load(fs.readFileSync(archivoDispositivos, 'utf8')) || { datos_snmp: { hosts: {} } };
     let index = Object.keys(estructuraYaml.datos_snmp.hosts).length;
-    let contadorswitch =1;
+    let contadorswitch = 1;
 
     // Limpia la estructura actual de hosts
     estructuraYaml.datos_snmp.hosts = {};
 
+    // Añade las IPs de los dispositivos a la estructura YAML
     datos.ip.forEach((ip, i) => {
       index++;
       estructuraYaml.datos_snmp.hosts[`switch${contadorswitch}`] = { host: ip };
@@ -180,6 +230,8 @@ function datosSNMP (datos){
     estructuraYaml.datos_snmp.vars = {
       marca: datos.marca,
       comunidad: datos.comunidad,
+      permisos: datos.permisos,
+      id_list: datos.id_list,
       device_type: datos.device_type,
       usuario: datos.user,
       contrasena: datos.password,
@@ -189,11 +241,13 @@ function datosSNMP (datos){
     fs.writeFileSync(archivoDispositivos, yaml.dump(estructuraYaml), 'utf8');
     console.log(`Configurando dispositivos con IPs: ${datos.ip.join(', ')}.`);
     return { exito: true, mensaje: `Configurando dispositivos con IPs: ${datos.ip.join(', ')}.` };
-    
+
   } catch (error) {
     console.error('Error al actualizar el archivo datos_snmp.yaml:', error);
+    return { exito: false, mensaje: 'Error al actualizar el archivo datos_snmp.yaml.' };
   }
 }
+
 
 
 function datosSTPActive (datos){
@@ -242,16 +296,15 @@ function datosSTPActive (datos){
     return { exito: true, mensaje: `Configurando dispositivos con IPs: ${datos.ip.join(', ')}.` };
     
   } catch (error) {
-    console.error('Error al actualizar el archivo datos_snmp.yaml:', error);
+    console.error('Error al actualizar el archivo datos_STPActive.yaml:', error);
   }
 }
-
-
 
 function datosSTPPriority (datos){
 
   console.log('Received datos:', datos);
 
+  
   const ipsInvalidas = datos.ip.filter(ip => !esIPValida(ip));
   if (ipsInvalidas.length > 0) {
     return { exito: false, mensaje: `Error: Las siguientes direcciones IP no son válidas: ${ipsInvalidas.join(', ')}` };
@@ -301,9 +354,67 @@ function datosSTPPriority (datos){
     return { exito: true, mensaje: `Configurando dispositivos con IPs: ${datos.ip.join(', ')}.` };
     
   } catch (error) {
-    console.error('Error al actualizar el archivo datos_snmp.yaml:', error);
+    console.error('Error al actualizar el archivo datos_STPPriority.yaml:', error);
   }
 }
+
+function datosSTPCostos(datos){
+
+  console.log('Received datos:', datos);
+
+  
+  const ipsInvalidas = datos.ip.filter(ip => !esIPValida(ip));
+  if (ipsInvalidas.length > 0) {
+    return { exito: false, mensaje: `Error: Las siguientes direcciones IP no son válidas: ${ipsInvalidas.join(', ')}` };
+  }
+  
+  // Validación del valor del costo
+  const costo = parseInt(datos.costo);
+  if (isNaN(costo) || costo < 0 || costo > 200000) {
+    return { exito: false, mensaje: "Error: EL costo debe ser un número entre 0 y 200000." };
+  }
+
+  const archivoDispositivos = path.join(__dirname, '..', '..', 'modulo_automatizacion', 'registros', 'datos_stpCost.yaml');
+  // Aquí, asegúrate de que el archivo YAML existe o créalo con una estructura básica
+  if (!fs.existsSync(archivoDispositivos)) {
+    fs.writeFileSync(archivoDispositivos, yaml.dump({ datos_stp: { hosts: {} } }), 'utf8');
+  }
+
+  try {
+    let estructuraYaml = yaml.load(fs.readFileSync(archivoDispositivos, 'utf8')) || { datos_stp: { hosts: {} } };
+    let index = Object.keys(estructuraYaml.datos_stp.hosts).length;
+    let contadorswitch =1;
+
+    // Limpia la estructura actual de hosts
+    estructuraYaml.datos_stp.hosts = {};
+
+    datos.ip.forEach((ip, i) => {
+      index++;
+      estructuraYaml.datos_stp.hosts[`switch${contadorswitch}`] = { host: ip };
+      contadorswitch++;
+    });
+
+    estructuraYaml.datos_stp.vars = {
+      marca: datos.marca,
+      modo: datos.modo,
+      interfaz: datos.interfaz,
+      vlan: datos.vlan,
+      instance: datos.instance,
+      costo: datos.costo,
+      device_type: datos.device_type,
+      usuario: datos.user,
+      contrasena: datos.password,
+    };
+
+    fs.writeFileSync(archivoDispositivos, yaml.dump(estructuraYaml), 'utf8');
+    console.log(`Configurando dispositivos con IPs: ${datos.ip.join(', ')}.`);
+    return { exito: true, mensaje: `Configurando dispositivos con IPs: ${datos.ip.join(', ')}.` };
+    
+  } catch (error) {
+    console.error('Error al actualizar el archivo datos_STPCost.yaml:', error);
+  }
+}
+
 
 function datosVLAN (datos){
 
@@ -359,7 +470,7 @@ function datosVLAN (datos){
     return { exito: true, mensaje: `Configurando dispositivos con IPs: ${datos.ip.join(', ')}.` };
     
   } catch (error) {
-    console.error('Error al actualizar el archivo datos_snmp.yaml:', error);
+    console.error('Error al actualizar el archivo datos_vlan.yaml:', error);
   }
 }
 
@@ -367,6 +478,7 @@ function datosLogs (datos){
 
   console.log('Received datos:', datos);
 
+  
   const ipsInvalidas = datos.ip.filter(ip => !esIPValida(ip));
   if (ipsInvalidas.length > 0) {
     return { exito: false, mensaje: `Error: Las siguientes direcciones IP no son válidas: ${ipsInvalidas.join(', ')}` };
@@ -405,14 +517,63 @@ function datosLogs (datos){
     // Escribe el archivo YAML con la nueva estructura
     fs.writeFileSync(archivoDispositivos, yaml.dump(estructuraYaml), 'utf8');
     console.log(`Configurando dispositivos con IPs: ${datos.ip.join(', ')}.`);
-    return { exito: true, mensaje: `Confurando dispositivos con IPs: ${datos.ip.join(', ')}.` };
+    return { exito: true, mensaje: `Configurando dispositivos con IPs: ${datos.ip.join(', ')}.` };
     
   } catch (error) {
-    console.error('Error al actualizar el archivo datos_snmp.yaml:', error);
+    console.error('Error al actualizar el archivo datos_logs.yaml:', error);
   }
 }
 
+function datosAcessList(datos){
 
+  console.log('Received datos:', datos);
+
+  const ipsInvalidas = datos.ip.filter(ip => !esIPValida(ip));
+  if (ipsInvalidas.length > 0) {
+    return { exito: false, mensaje: `Error: Las siguientes direcciones IP no son válidas: ${ipsInvalidas.join(', ')}` };
+  }
+  
+  const archivoDispositivos = path.join(__dirname, '..', '..', 'modulo_automatizacion', 'registros', 'datos_access_list.yaml');
+  // Aquí, asegúrate de que el archivo YAML existe o créalo con una estructura básica
+  if (!fs.existsSync(archivoDispositivos)) {
+    fs.writeFileSync(archivoDispositivos, yaml.dump({ datos_access_list: { hosts: {} } }), 'utf8');
+  }
+
+  try {
+    let estructuraYaml = yaml.load(fs.readFileSync(archivoDispositivos, 'utf8')) || { datos_access_list: { hosts: {} } };
+    let index = Object.keys(estructuraYaml.datos_access_list.hosts).length;
+    let contadorswitch =1;
+
+    // Limpia la estructura actual de hosts
+    estructuraYaml.datos_access_list.hosts = {};
+
+    datos.ip.forEach((ip, i) => {
+      index++;
+      estructuraYaml.datos_access_list.hosts[`switch${contadorswitch}`] = { host: ip };
+      contadorswitch++;
+    });
+
+    // Establece los datos de usuario, comunidad y contraseña fuera del bucle
+    estructuraYaml.datos_access_list.vars = {
+      marca: datos.marca,
+      ip_red: datos.ip_red,
+      mascara_wildcard: datos.mascara_wildcard,
+      id_list: datos.id_list,
+      n_rule: datos.n_rule,
+      device_type: datos.device_type,
+      usuario: datos.user,
+      contrasena: datos.password,
+    };
+
+    // Escribe el archivo YAML con la nueva estructura
+    fs.writeFileSync(archivoDispositivos, yaml.dump(estructuraYaml), 'utf8');
+    console.log(`Configurando dispositivos con IPs: ${datos.ip.join(', ')}.`);
+    return { exito: true, mensaje: `Configurando dispositivos con IPs: ${datos.ip.join(', ')}.` };
+    
+  } catch (error) {
+    console.error('Error al actualizar el archivo datos_access_list.yaml:', error);
+  }
+}
 
 function guardarDispositivo(req, res) {
   const tipoFormulario = req.body.tipoFormulario;
@@ -429,66 +590,159 @@ function guardarDispositivo(req, res) {
     
   } else if (tipoFormulario === 'data_snmp') {
 
-      const resultado = datosSNMP(req.body);
-      console.log(resultado);
+    const resultado = datosSNMP(req.body);
+  
+
+    try {
+      // Asegúrate de que la ruta al script Python sea correcta
+      const pathToPythonScript = '/home/du/Prototipo_App2024/app_2024/modulo_automatizacion/snmp_int.py';
+      const resPython = execSync(`python3 ${pathToPythonScript}`);
+      console.log('Respuesta de Python:', resPython.toString());
+
       if (resultado.exito) {
-        res.status(200).send(resultado.mensaje);
+        //res.status(200).send(resultado.mensaje);
+        res.status(200).send(resPython.toString());
       } else {
-        res.status(200).send(resultado.mensaje); 
+        res.status(200).send(resultado.mensaje);
       }
+    } catch (error) {
+      console.error('Error ejecutando el script Python:', error);
+      res.status(500).send('Error al procesar la configuración SNMP.');
+    }
+    
   } else if (tipoFormulario === 'stpActive') {
 
-      const resultado = datosSTPActive(req.body);
-      console.log(resultado);
+    const resultado = datosSTPActive(req.body);
+    console.log(resultado);
+
+    try {
+      const pathToPythonScript = '/home/du/Prototipo_App2024/app_2024/modulo_automatizacion/stp_active_int.py';
+      const resPython = execSync(`python3 ${pathToPythonScript}`);
+      console.log('Respuesta de Python:', resPython.toString());
 
       if (resultado.exito) {
-        res.status(200).send(resultado.mensaje);
+        res.status(200).send(resPython.toString());
       } else {
-        res.status(200).send(resultado.mensaje); 
+        res.status(200).send(resultado.mensaje);
       }
+    } catch (error) {
+      console.error('Error ejecutando el script Python:', error);
+      res.status(500).send('Error al procesar la configuración STP.');
+    }
+
   } else if (tipoFormulario === 'stpPriority') {
 
-      const resultado = datosSTPPriority(req.body);
-      console.log(resultado);
+    const resultado = datosSTPPriority(req.body);
+    console.log(resultado);
+
+    try {
+  
+      const pathToPythonScript = '/home/du/Prototipo_App2024/app_2024/modulo_automatizacion/stp_priority_int.py';
+      const resPython = execSync(`python3 ${pathToPythonScript}`);
+      console.log('Respuesta de Python:', resPython.toString());
 
       if (resultado.exito) {
-        res.status(200).send(resultado.mensaje);
+        res.status(200).send(resPython.toString());
       } else {
-        res.status(200).send(resultado.mensaje); 
+        res.status(200).send(resultado.mensaje);
       }
+    } catch (error) {
+      console.error('Error ejecutando el script Python:', error);
+      res.status(500).send('Error al procesar la configuración STP.');
+    }
+
   } else if (tipoFormulario === 'vlan') {
 
-      const resultado = datosVLAN(req.body);
-      console.log(resultado);
+    const resultado = datosVLAN(req.body);
+    console.log(resultado);
+
+    try {
+  
+      const pathToPythonScript = '/home/du/Prototipo_App2024/app_2024/modulo_automatizacion/vlan_int.py';
+      const resPython = execSync(`python3 ${pathToPythonScript}`);
+      console.log('Respuesta de Python:', resPython.toString());
 
       if (resultado.exito) {
-        res.status(200).send(resultado.mensaje);
+        res.status(200).send(resPython.toString());
       } else {
-        res.status(200).send(resultado.mensaje); 
+        res.status(200).send(resultado.mensaje);
       }
+    } catch (error) {
+      console.error('Error ejecutando el script Python:', error);
+      res.status(500).send('Error al procesar la configuración de VLAN.');
+    }
+
   } else if (tipoFormulario === 'logs') {
 
-      const resultado = datosLogs(req.body);
-      console.log(resultado);
+    const resultado = datosLogs(req.body);
+    console.log(resultado);
+
+    try {
+  
+      const pathToPythonScript = '/home/du/Prototipo_App2024/app_2024/modulo_automatizacion/logs_int.py';
+      const resPython = execSync(`python3 ${pathToPythonScript}`);
+      console.log('Respuesta de Python:', resPython.toString());
 
       if (resultado.exito) {
-        res.status(200).send(resultado.mensaje);
+        res.status(200).send(resPython.toString());
       } else {
-        res.status(200).send(resultado.mensaje); 
+        res.status(200).send(resultado.mensaje);
       }
+    } catch (error) {
+      console.error('Error ejecutando el script Python:', error);
+      res.status(500).send('Error al procesar la configuración de LOGS.');
+    }  
+
+  } else if (tipoFormulario === 'access_list') {
+
+    const resultado = datosAcessList(req.body);
+
+    try {
   
+      const pathToPythonScript = '/home/du/Prototipo_App2024/app_2024/modulo_automatizacion/accesslist_int.py';
+      const resPython = execSync(`python3 ${pathToPythonScript}`);
+      console.log('Respuesta de Python:', resPython.toString());
+
+      if (resultado.exito) {
+        res.status(200).send(resPython.toString());
+      } else {
+        res.status(200).send(resultado.mensaje);
+      }
+    } catch (error) {
+      console.error('Error ejecutando el script Python:', error);
+      res.status(500).send('Error al procesar la configuración de LOGS.');
+    }  
+
+  } else if (tipoFormulario === 'stpCost') {
+
+    const resultado = datosSTPCostos(req.body);
+
+    try {
+  
+      const pathToPythonScript = '/home/du/Prototipo_App2024/app_2024/modulo_automatizacion/stp_cost_int.py';
+      const resPython = execSync(`python3 ${pathToPythonScript}`);
+      console.log('Respuesta de Python:', resPython.toString());
+
+      if (resultado.exito) {
+        res.status(200).send(resPython.toString());
+      } else {
+        res.status(200).send(resultado.mensaje);
+      }
+    } catch (error) {
+      console.error('Error ejecutando el script Python:', error);
+      res.status(500).send('Error al procesar la configuración de STP COST.');
+    }  
 
   } else {
       return res.status(400).send('Tipo de formulario inválido');
   }
 }
 
-
- // Exportando todas las funciones
+// Exportando todas las funciones
 module.exports = {
     configure_archivo,
     configure_ini,
     guardarDispositivo,
     uploadYAMLFile,
-    uploadYAML: uploadYAML.single('file')  // Esto configura y exporta la función middleware
+    uploadYAML: uploadYAML.single('file'),  // Esto configura y exporta la función middleware
 };

@@ -12,25 +12,46 @@ switchs_cisco:
     usuario: networking
     contrasena: Ygvfe34a.2018
     comunidad_snmp: $1$5.v/c/$
+    region_mstp: region3
+    tipo: switch
+    marca: CISCO
+    device_type: cisco_ios
 
-switchs_hp:
+switchs_hpV1910:
+  hosts:
+    switch1:
+      host: 10.0.1.5
+    switch2:
+      host: 10.0.1.6
+    switch3:
+      host: 10.0.1.12
+  vars:
+    usuario: networking
+    contrasena: Ygvfe34a.2018
+    comunidad_snmp: $1$5.v/c/$
+    region_mstp: region3
+    tipo: switch
+    marca: HP-V1910
+    device_type: none
+
+switchs_hpV5120:
   hosts:
     switch1:
       host: 10.0.1.3
     switch2:
-      host: 10.0.1.9
-    switch3:
-      host: 10.0.1.5
-    switch4:
-      host: 10.0.1.6
-    switch5:
       host: 10.0.1.8
-    switch6:
+    switch3:
+      host: 10.0.1.9
+    switch4:
       host: 10.0.1.10
   vars:
     usuario: networking
     contrasena: Ygvfe34a.2018
     comunidad_snmp: $1$5.v/c/$
+    region_mstp: region3
+    tipo: switch
+    marca: HP-V5120
+    device_type: hp_comware
 
 switchs_3comm:
   hosts:
@@ -50,6 +71,10 @@ switchs_3comm:
     usuario: networking
     contrasena: Ygvfe34a.2018
     comunidad_snmp: $1$5.v/c/$
+    region_mstp: region3
+    tipo: switch
+    marca: 3COM-BASELINE
+    device_type: none
 
 switchs_tplink:
   hosts:
@@ -61,4 +86,8 @@ switchs_tplink:
     usuario: networking
     contrasena: Ygvfe34a.2018
     comunidad_snmp: $1$5.v/c/$
+    region_mstp: region3
+    tipo: switch
+    marca: TPLINK-JetStream
+    device_type: none
 

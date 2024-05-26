@@ -14,8 +14,8 @@ const app = express();
 const PUERTO = 443;
 
 https.createServer({
-    key: fs.readFileSync('/home/du/app_2024/http/key.pem'),
-    cert: fs.readFileSync('/home/du/app_2024/http/cert.pem'),
+    key: fs.readFileSync('/home/du/Prototipo_App2024/app_2024/http/key.pem'),
+    cert: fs.readFileSync('/home/du/Prototipo_App2024/app_2024/http/cert.pem'),
 }, app).listen(PUERTO, function(){
     console.log('Escuchando en el puerto 443');
 });
@@ -46,7 +46,9 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'next')));
 app.use(express.static(path.join(__dirname, '..', '..', 'modulo_automatizacion', 'registros')));
+app.use(express.static(path.join(__dirname, '..', '..', 'modulo_automatizacion', 'comandos')));
 app.use(express.static(path.join(__dirname, '..', '..', 'Epops', 'inventarios')));
+app.use(express.static(path.join(__dirname, '..', '..', 'Epops', 'balanceo')));
  
 app.use('/', loginRoutes);
 

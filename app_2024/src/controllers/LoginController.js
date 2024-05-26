@@ -72,6 +72,57 @@ function updateAdmin(req, res) {
   });
 }
 
+function updatePassword(req, res) {
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+  if (!req.session.loggedin) {
+    return res.redirect('/');
+  }
+
+  req.getConnection((err, conn) => {
+    if (err) {
+      res.render('error', { error: 'Error de conexión a la base de datos' });
+      return;
+    }
+
+    conn.query('SELECT password FROM users WHERE email = ?', [req.session.email], (err, results) => {
+      if (err || results.length === 0) {
+        res.render('login/profile', { error: 'Usuario no encontrado', name: req.session.name, email: req.session.email });
+        return;
+      }
+
+      const user = results[0];
+
+      bcrypt.compare(currentPassword, user.password, (err, isMatch) => {
+        if (!isMatch) {
+          res.render('login/profile', { error: 'Contraseña actual incorrecta', name: req.session.name, email: req.session.email });
+          return;
+        }
+
+        if (newPassword !== confirmNewPassword) {
+          res.render('login/profile', { error: 'Las nuevas contraseñas no coinciden', name: req.session.name, email: req.session.email });
+          return;
+        }
+
+        bcrypt.hash(newPassword, 12, (err, hash) => {
+          if (err) {
+            res.render('login/profile', { error: 'Error al encriptar la nueva contraseña', name: req.session.name, email: req.session.email });
+            return;
+          }
+
+          conn.query('UPDATE users SET password = ?, is_default_password = FALSE WHERE email = ?', [hash, req.session.email], (err, results) => {
+            if (err) {
+              res.render('login/profile', { error: 'Error al actualizar la contraseña', name: req.session.name, email: req.session.email });
+              return;
+            }
+
+            res.render('login/profile', { message: 'Contraseña actualizada correctamente', name: req.session.name, email: req.session.email });
+          });
+        });
+      });
+    });
+  });
+}
 
 
 function showUpdateAdmin(req, res) {
@@ -80,10 +131,19 @@ function showUpdateAdmin(req, res) {
     res.render('login/updateAdmin');  // Asegúrate de que la ruta del archivo sea correcta
   } else {
     // Si no es administrador o no está logueado, redirige al login
-    res.redirect('/login');
+    res.redirect('/');
   }
 }
 
+function showProfile(req, res) {
+  if (!req.session.loggedin) {
+    return res.redirect('/');  // Redirigir si no está logueado
+  }
+  res.render('login/profile', {
+    name: req.session.name,
+    email: req.session.email
+  });
+}
 
   
 function register(req, res) {
@@ -94,16 +154,17 @@ function register(req, res) {
   }
 }
 
+
 function printuser(req, res) {
-    const { name, email, username, password, role } = req.body;
+  const { name, email, username, password, role } = req.body;
   
-    req.getConnection((err, conn) => {
-      if (err) {
-        res.render('login/register', { error: 'Error de conexión a la base de datos' });
-        return;
-      }
+  req.getConnection((err, conn) => {
+    if (err) {
+      res.render('login/register', { error: 'Error de conexión a la base de datos' });
+      return;
+    }
   
-      conn.query('SELECT * FROM users WHERE email = ? OR username = ?', [email, username], (err, results) => {
+    conn.query('SELECT * FROM users WHERE email = ? OR username = ?', [email, username], (err, results) => {
         if (err) {
           res.render('login/register', { error: 'Error al verificar el usuario' });
           return;
@@ -145,7 +206,7 @@ function printuser(req, res) {
   }
   
 
-function logout (req, res) {
+  function logout (req, res) {
     if (req.session.loggedin ==true){
       req.session.destroy();
       res.redirect('/')
@@ -153,8 +214,6 @@ function logout (req, res) {
       res.redirect('/')
     }
   }
-
-  
   
   module.exports = {
     login: login,
@@ -163,5 +222,7 @@ function logout (req, res) {
     auth: auth,
     logout: logout,
     updateAdmin: updateAdmin,
-    showUpdateAdmin, showUpdateAdmin,
+    showUpdateAdmin: showUpdateAdmin,
+    showProfile: showProfile,
+    updatePassword: updatePassword,
   }
