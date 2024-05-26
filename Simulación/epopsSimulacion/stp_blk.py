@@ -6,7 +6,7 @@ def stp_status(direc,stpi,datos):
     f=0
     fif=[]
     for server_ip in direc:
-        comunidad = datos[server_ip]["comunidad_snmp"]
+        comunidad = datos[server_ip]["snmp"]
         errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.bulkCmd(
             cmdgen.CommunityData(comunidad),
             cmdgen.UdpTransportTarget((server_ip, 161)),
