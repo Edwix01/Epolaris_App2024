@@ -7,6 +7,13 @@ import time
 import teleg
 from influxdb import InfluxDBClient
 
+#Valores de configuración del script
+current_dir = os.path.dirname(__file__)
+config_file = current_dir+'/configuracion/configuracion_monitoreo.json'
+config = obt_infyam.read_config(config_file)
+time_logs = config.get('wartiempologs', 10)  
+num_logs = config.get('warnumlogs', 10)  
+
 # Configurar la conexión a la base de datos InfluxDB
 client = InfluxDBClient(host='127.0.0.1', port=8086, database='influx')
 
@@ -25,11 +32,11 @@ def leer_incidencias(agentes):
     infcpuconsum = {}
 
     for agente in agentes:
-        query = f'SELECT last("interrupciones") FROM "interrumpciones" WHERE ("dispositivo" = \'{agente}\') AND time >= now() - 30m AND time <= now() fill(null)'
+        query = f'SELECT sum("interrupciones") FROM "interrumpciones" WHERE ("dispositivo" = \'{agente}\') AND time >= now() - {time_logs}m and time <= now() GROUP BY time(168h) fill(null);'
         # Ejecutar la consulta para el agente actual
         result = client.query(query)
         for point in result.get_points():
-            infcpuconsum[agente] = (float(point["last"]))
+            infcpuconsum[agente] = (float(point["sum"]))
 
     # Cerrar la conexión
     client.close()
@@ -118,10 +125,11 @@ def prevención_corte_logs(direc):
     tail = "-"*len(cabecera)
     mesf = ""
     for disp in direc:
-        if  interrupciones[disp] >= 2:
-            mesf = (cabecera+"\nEl dispositivo: "+disp+" ha tenido varias fallas"+"\nSe ha levantado los logs\n"+tail)
+        if  interrupciones[disp] >= num_logs:
+            mesf = (cabecera+"\nMúltiples Interrupciones en: "+disp+"\nSe ha levantado el servicio de logs\n"+tail)
             procesar_dispositivos_logs(datos_yaml,disp)
             print(mesf)
+            teleg.enviar_mensaje(mesf)
 
 current_dir = os.path.dirname(__file__)
 nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
@@ -131,4 +139,5 @@ direc = datos.keys()
 while True:
     print("Monitoreando Interrupciones - Logs")
     prevención_corte_logs(direc)
-    time.sleep(10) #Tiempo de Simulacion 10seg - Tiempo Real 60*55
+    print("")
+    time.sleep(time_logs*60) #Tiempo de Simulacion 10seg - Tiempo Real 60*55

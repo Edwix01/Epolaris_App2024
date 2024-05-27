@@ -149,4 +149,4 @@ datos = obt_infyam.infyam(nombreyaml)
 while True:
     salcpu = mon_cpu(datos,diccionario_resultante)
     wrinfluxcpu.wr_influx(salcpu)
-    time.sleep(600)
+    time.sleep(30)

@@ -1,5 +1,5 @@
 import yaml
-
+import json
 def infyam(nombre):
 # Cargar el archivo YAML
     """
@@ -33,3 +33,9 @@ def infyam(nombre):
 
 # Imprimir el diccionario de credenciales SSH y SNMP para todos los switches
     return credenciales_switches
+
+# Función para leer el archivo de configuración
+def read_config(file_path):
+    with open(file_path, 'r') as file:
+        config = json.load(file)
+    return config
