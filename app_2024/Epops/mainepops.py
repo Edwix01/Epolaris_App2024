@@ -56,8 +56,7 @@ def main_top(direc):
     #Fase 3 - Identificación de Conexiones
     
     l = com_conex.b_conex(direc,b_id,stn)
-    print("Conexiones")
-    print(l)
+
    #Mapeo de Las etiquetas
     info_int,f3,fif3 = map_int.ma_int(direc,datos)
     nf = verstp.obtener_numeros_despues_del_punto(l)
@@ -71,12 +70,17 @@ def main_top(direc):
     b_root_gr = bridge_id_root.encontrar_ip_por_bridge_id(bridge_id_root_dis, b_id)
     bloq_int=tree.identificar_interfaces_bloqueadas(nodb, info_int)
     interconnections = tree.generar_arbol_conexiones_web(l,info_int)
-    print("Interconexiones: ")
-    print(interconnections)
+
     conexiones_blok = tree.marcar_puertos_bloqueados(interconnections, bloq_int)
     hostname = tree.obtener_hostname_dispositivos(direc,datos)
     info_disp = tree.informacion_dispositivos(archivoDispositivos)
-
+    # Escribe las variables en un archivo
+    with open('datos.txt', 'w') as archivo:
+        archivo.write(f"{direc}\n")
+        archivo.write(f"{l}\n")
+        archivo.write(f"{interconnections}\n")
+        archivo.write(f"{b_root}\n")
+        
     print("------------- EJECUTANDO FASE 5 (GENERANDO ARCHIVOS DE DESPLIEGUE) -------------------")
     #Fase 5 - Guardamos archivos donde se almacenan las conexiones
     current_dir = os.path.dirname(__file__)
