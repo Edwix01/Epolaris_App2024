@@ -1,11 +1,11 @@
 {
-    "montiempoexec": 2,
+    "montiempoexec": 10,
     "montoleranciaping": 5,
-    "moninterfaces": 2,
+    "moninterfaces": 5,
     "wartiempointe": 5,
-    "warnuminte":2,
+    "warnuminte":5,
     "wartiempologs": 5,
-    "warnumlogs":3,
+    "warnumlogs":300,
     "cputiempo":20, 
     "cpuvalref":10 
 }

@@ -116,8 +116,8 @@ def prevención_corte_logs(direc):
     Returns:
     Advertencia - Mensaje enviado por telegram
     """
-    base_path = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios"
-    archivo = os.path.join(base_path, "dispositivos.yaml")
+    current_dir = os.path.dirname(__file__)
+    archivo = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
     datos_yaml = read_yaml.cargar_datos_snmp(archivo)
     interrupciones = leer_incidencias(direc)
     #Generar Advertencia

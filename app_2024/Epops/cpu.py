@@ -107,7 +107,9 @@ def mon_cpu(info,datos):
         match datos[server_ip]:
             case "switchs_tplink":
                 oid ="1.3.6.1.4.1.11863.6.4.1.1.1.1.2"
-            case "switchs_hp":
+            case "switchs_hpV5120":
+                oid = "1.3.6.1.4.1.25506.2.6.1.1.1.1.6"
+            case "switchs_hpV1910":
                 oid = "1.3.6.1.4.1.25506.2.6.1.1.1.1.6"
             case "switchs_3comm":
                 sal[server_ip] = comcpu(server_ip,"networking","Ygvfe34a.2018")
@@ -119,7 +121,7 @@ def mon_cpu(info,datos):
                 oid = '1.3.6.1.4.1.9.2.1.58'
         
         errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.bulkCmd(
-            cmdgen.CommunityData(datos[server_ip]["snmp"]),
+            cmdgen.CommunityData(info[server_ip]["snmp"]),
             cmdgen.UdpTransportTarget((server_ip, 161)),
             0,25,
             oid
@@ -128,7 +130,7 @@ def mon_cpu(info,datos):
         for varBindTableRow in varBindTable:
             for name, val in varBindTableRow:
                 try:
-                    if datos[server_ip] == "switchs_hp":
+                    if datos[server_ip] == "switchs_hpV5120" or datos[server_ip] == "switchs_hpV1910":
                         if float(val.prettyPrint())>0:
                             sal[server_ip] = val.prettyPrint()
                             print(val.prettyPrint())
@@ -143,9 +145,8 @@ def mon_cpu(info,datos):
 current_dir = os.path.dirname(__file__)
 nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
 diccionario_resultante = leer_cpu.crear_diccionario_host_marca(nombreyaml)
-diccionario_resultante = obt_infyam.infyam(nombreyaml)
 datos = obt_infyam.infyam(nombreyaml)
-
+print(diccionario_resultante)
 while True:
     salcpu = mon_cpu(datos,diccionario_resultante)
     wrinfluxcpu.wr_influx(salcpu)
