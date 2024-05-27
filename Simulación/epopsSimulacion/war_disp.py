@@ -6,6 +6,17 @@ import teleg
 from influxdb import InfluxDBClient
 import loadbalance
 import networkx as nx
+import obt_infyam
+import os
+#Valores de configuración del script
+current_dir = os.path.dirname(__file__)
+config_file = current_dir+'/configuracion/configuracion_monitoreo.json'
+config = obt_infyam.read_config(config_file)
+time_int = config.get('wartiempointe', 10)  
+num_int = config.get('warnuminte', 5)  
+
+with open('datos.txt', 'r') as archivo:
+    time_mon = str(archivo.readline().strip())
 
 def encontrar_caminos_posibles(grafo_matriz, nodo_inicial, nodo_final):
     """
@@ -50,11 +61,11 @@ def leer_incidencias(agentes):
     infcpuconsum = {}
 
     for agente in agentes:
-        query = f'SELECT last("interrupciones") FROM "interrumpciones" WHERE ("dispositivo" = \'{agente}\') AND time >= now() - 30m AND time <= now() fill(null)'
+        query = f'SELECT sum("interrupciones") FROM "interrumpciones" WHERE ("dispositivo" = \'{agente}\') AND time >= now() -  {time_int}m and time <= now() GROUP BY time(168h) fill(null);'
         # Ejecutar la consulta para el agente actual
         result = client.query(query)
         for point in result.get_points():
-            infcpuconsum[agente] = (float(point["last"]))
+            infcpuconsum[agente] = (float(point["sum"]))
 
     # Cerrar la conexión
     client.close()
@@ -179,14 +190,15 @@ def prevención_corte(direc,dic_conex):
     mes = ""
     mesf = ""
     for disp in direc:
-        if  interrupciones[disp] >= 2:
+        if  interrupciones[disp] >= num_int:
             for di in dic_conex[disp]:
-                mes += str(di)+" - "
+                mes += str(di)+"\n"
             
-            mesf = (cabecera+"\nEl dispositivo: "+disp+" ha tenido varias fallas"+"\nLo que puede provocar fallas en"
-                  +" los dispositivos:\n"+ mes+"\n"+tail)
+            mesf = (cabecera+"\nMúltiples Interrupciones en: "+disp+"\n Posibles dispositivos afectados: \n"
+                  + mes+"\n"+tail)
             
             print(mesf)
+            teleg.enviar_mensaje(mesf)
 
 
 while True:
@@ -198,4 +210,4 @@ while True:
         broot =  str(archivo.readline().strip())
         dic_cone = iden_disp_conec(l,interconections,broot)
         prevención_corte(direc,dic_cone)
-    time.sleep(5)
+    time.sleep(time_int*60)

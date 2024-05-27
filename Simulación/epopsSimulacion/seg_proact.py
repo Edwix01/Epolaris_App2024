@@ -1,8 +1,10 @@
 import subprocess
 import time 
+import os
 # Lista de scripts a ejecutar
-scripts = ['mon3.py', 'cpu.py', 'war_cpu.py','war_disp.py','war_logs.py']
+current_dir = os.path.dirname(__file__)
 
+scripts = [current_dir+'/mon3.py', current_dir+'/cpu.py', current_dir+'/war_cpu.py',current_dir+'/war_disp.py',current_dir+'/war_logs.py']
 # Lista para almacenar los procesos
 procesos = []
 

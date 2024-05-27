@@ -90,7 +90,7 @@ def mon_cpu(info,datos):
     sal = {}
     direc = datos.keys()
     for server_ip in direc:
-        print ("\nFetching stats for...", server_ip)
+        print ("\nFConsultando Consumo CPU de: ", server_ip)
         match datos[server_ip]:
             case "switchs_tplink":
                 oid ="1.3.6.1.4.1.11863.6.4.1.1.1.1.2"
@@ -117,10 +117,8 @@ def mon_cpu(info,datos):
                     if datos[server_ip] == "switchs_hp":
                         if float(val.prettyPrint())>0:
                             sal[server_ip] = val.prettyPrint()
-                            print(val.prettyPrint())
                     else:
                         sal[server_ip] = val.prettyPrint()
-                        print(val.prettyPrint())
                 except TypeError:
                     pass
     return sal
