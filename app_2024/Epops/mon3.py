@@ -221,7 +221,7 @@ while True:
     """
 
     if fp == 1:
-        time.sleep(5)
+        time.sleep(15)
         dfsnmp =[] #Lista con direcciones IP de todos los equipos con problemas en la consulta snmp
         print("Se ejecuto algoritmo de descubrimiento de Topología")
         #print(enr)
