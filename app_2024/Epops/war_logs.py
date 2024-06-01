@@ -125,11 +125,19 @@ def prevención_corte_logs(direc):
     tail = "-"*len(cabecera)
     mesf = ""
     for disp in direc:
-        if  interrupciones[disp] >= num_logs:
-            mesf = (cabecera+"\nMúltiples Interrupciones en: "+disp+"\nSe ha levantado el servicio de logs\n"+tail)
-            procesar_dispositivos_logs(datos_yaml,disp)
-            print(mesf)
-            teleg.enviar_mensaje(mesf)
+        try:
+            if interrupciones[disp] >= num_logs:
+                mesf = (cabecera + "\nMúltiples Interrupciones en: " + disp + "\nSe ha levantado el servicio de logs\n" + tail)
+                procesar_dispositivos_logs(datos_yaml, disp)
+                print(mesf)
+                teleg.enviar_mensaje(mesf)
+        except KeyError as e:
+            print(f"Error: Dispositivo {disp} no encontrado en interrupciones. Detalles: {e}")
+        except TypeError as e:
+            print(f"Error: Tipo de dato incorrecto. Detalles: {e}")
+        except Exception as e:
+            print(f"Ocurrió un error inesperado. Detalles: {e}")
+
 
 current_dir = os.path.dirname(__file__)
 nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
