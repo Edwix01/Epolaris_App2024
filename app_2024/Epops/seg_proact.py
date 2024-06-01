@@ -14,7 +14,7 @@ for script in scripts:
     print("Se ejecuto el script",script)
     print("-"*30)
     proceso = subprocess.Popen(['python3', script])
-    time.sleep(10)
+    time.sleep(80)
     procesos.append(proceso)
 
 # Opcional: Esperar a que todos los procesos terminen y capturar sus salidas
