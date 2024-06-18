@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(to bottom right, rgba(255, 255, 255, 1), #b7e3ed 40%, #78d5e9); /* Fondo en degradado iniciando con blanco */
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 1), #84ACE3 100%, #84ACE3); /* Fondo en degradado iniciando con blanco */
   font-family: 'Arial', sans-serif;
   color: #000; /* Texto en negro para contrastar con el fondo claro */
 }
@@ -44,7 +44,7 @@ body {
 }
 
 .button-icon img {
-  width: 160px; /* Tamaño fijo para las imágenes */
+  width: 100px; /* Tamaño fijo para las imágenes */
   height: auto;
 }
 

@@ -13,7 +13,7 @@ def epmiko(networking, password, direcciones):
     Return:
     Se escribe el archivo 'b_id.txt' para posteriormente obtener el bridge ID mediante filtrado
     """
-    args = ['./b_id.sh', networking, password] + direcciones
+    args = ['./b_id.sh', networking, password] + direcciones + direcciones
     
     try:
         # Abrir el archivo en modo escritura
