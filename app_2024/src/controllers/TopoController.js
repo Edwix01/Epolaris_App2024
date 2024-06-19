@@ -82,7 +82,6 @@ function configuraciones_ini(req, res) {
 }
 
   module.exports = {
-    topo_ini: topo_ini,
     topo_inicial: topo_inicial,
     operaciones_ini: operaciones_ini,
     update_Topology: update_Topology,
