@@ -83,8 +83,6 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-
-
 document.getElementById('uploadForm').addEventListener('submit', function(e) {
   e.preventDefault();
   var formData = new FormData(this);
@@ -103,6 +101,7 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
     messageBox.textContent = data.message; // Mensaje de éxito desde el servidor
     messageBox.style.display = 'block';
     messageBox.className = 'notification show'; // Añade una clase para mostrar la notificación
+    resetForm(); // Llamada a la función para resetear el formulario
     setTimeout(() => {
       messageBox.style.display = 'none';
       messageBox.className = 'notification'; // Oculta la notificación después de unos segundos
@@ -121,6 +120,10 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
   });
 });
 
+function resetForm() {
+  document.getElementById('uploadForm').reset();
+  document.getElementById('file-list').innerHTML = '';
+}
 </script>
 
 </body>
