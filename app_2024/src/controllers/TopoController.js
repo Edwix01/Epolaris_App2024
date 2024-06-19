@@ -58,13 +58,12 @@ function chageDetect(req, res){
 function checkChange(req, res){
   if (req.session.loggedin) {
     req.session.change = verificarCambios()
-    console.log('cambio regustrado para actualizar',req.session.change)
+    console.log('Cambio registrado para actualizar',req.session.change)
     res.json({change: req.session.change})
   } else {
     res.status(401).json({error: 'NO AUTORIZADO'})
   }
 }
-
 
 function operaciones_ini(req, res) {
   if (req.session.loggedin ){
@@ -74,13 +73,22 @@ function operaciones_ini(req, res) {
   }
 }
 
+function configuraciones_ini(req, res) {
+  if (req.session.loggedin ){
+    res.render('epops/configuracion-aplicacion', {name: req.session.name});
+  }else{
+    res.redirect('/');
+  }
+}
+
   module.exports = {
+    topo_ini: topo_ini,
     topo_inicial: topo_inicial,
     operaciones_ini: operaciones_ini,
     update_Topology: update_Topology,
     chageDetect: chageDetect,
     checkChange: checkChange,
+    configuraciones_ini : configuraciones_ini,
   }
-
 
   
