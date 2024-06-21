@@ -85,13 +85,13 @@ def warning_cpu(vn,datacpu):
             f = True
 
 
-        if desviacion >= 0.5:
+        if desviacion >= 2:
             mvar = "Variaciones Ligeras de Consumo"
             f = True
-        if desviacion >= 1.5:
+        if desviacion >= 3.5:
             mvar = "Variaciones Moderadas de Consumo"
             f = True
-        if desviacion >= 3.5:
+        if desviacion >= 5.5:
             mvar = "Variaciones Rápidas de Consumo"
             f = True
 
