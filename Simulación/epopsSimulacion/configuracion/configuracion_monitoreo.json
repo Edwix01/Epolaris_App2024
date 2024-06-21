@@ -7,5 +7,6 @@
     "wartiempologs": 5,
     "warnumlogs":3,
     "cputiempo":20, 
-    "cpuvalref":10 
+    "cpuvalref":10,
+    "servidor_logs":"10.0.1.10" 
 }
