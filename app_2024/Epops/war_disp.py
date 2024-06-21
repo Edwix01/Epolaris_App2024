@@ -18,6 +18,9 @@ num_int = config.get('warnuminte', 5)
 with open('datos.txt', 'r') as archivo:
     time_mon = str(archivo.readline().strip())
 
+def ip_to_tuple(ip):
+    return tuple(map(int, ip.split('.')))
+
 def encontrar_caminos_posibles(grafo_matriz, nodo_inicial, nodo_final):
     """
     Funcion que permite encontrar los caminos entre dos nodos
@@ -121,7 +124,8 @@ def iden_disp_conec(conex,interconexiones,root):
     a = []
     c = 0
     lj = []
-    direc = list(conex.keys())
+    direc1 = list(conex.keys())
+    direc = sorted(direc1, key=ip_to_tuple)
     conjunto_resultante = set()
     maconex = grafo_a_matriz(conex)
     #Calculo de niveles de los dispositivos
@@ -187,13 +191,12 @@ def prevención_corte(direc,dic_conex):
     #Generar Advertencia
     cabecera = "-----------------------Notificación---------------------------"
     tail = "-"*len(cabecera)
-    mes = ""
-    mesf = ""
     for disp in direc:
+        mes = ""
+        mesf = ""
         if  interrupciones[disp] >= num_int:
             for di in dic_conex[disp]:
                 mes += str(di)+"\n"
-            
             mesf = (cabecera+"\nMúltiples Interrupciones en: "+disp+"\n Posibles dispositivos afectados: \n"
                   + mes+"\n"+tail)
             

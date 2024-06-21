@@ -59,7 +59,7 @@ def warning_cpu(vn,datacpu):
     none:             Envia advertencia 
     """
 
-
+    mvar = ""
     mdes =""
     detalles=""
     
@@ -78,21 +78,35 @@ def warning_cpu(vn,datacpu):
         print("Valor Max: ",pico)
         print("-"*len(cab))
         #Clasificación de notificaciones   
-        if pico >= vn+10 and mediana >= vn-4 and media >= vn:
-            mdes = "Existio un sobrepico de Consumo" 
-            f=True  
-        if desviacion >= 1 and mediana >= vn+0.5 and media >= vn+ 1.5:
-            mdes = "Variaciones Suaves de Consumo"
-            f=True
-        if desviacion >= 4 and mediana >= vn+2.5 and media >= vn+ 5:
-            mdes = "Variaciones Considerables de Consumo" 
-            f=True
-        if desviacion >= 8 and mediana >= vn+5 and media >= vn+ 8:
-            mdes = "Variaciones Graves de Consumo"
-            f=True
+
+
+        if pico >= vn + 5 and mediana <= vn:
+            mdes = "Hubo un gran consumo por un momento"
+            f = True
+
+
+        if desviacion >= 0.5:
+            mvar = "Variaciones Ligeras de Consumo"
+            f = True
+        if desviacion >= 1.5:
+            mvar = "Variaciones Moderadas de Consumo"
+            f = True
+        if desviacion >= 3.5:
+            mvar = "Variaciones Rápidas de Consumo"
+            f = True
+
+        if media >= vn + 1.5:
+            mdes = "Consumo de CPU levemente alto"
+            f = True
+        if media >= vn + 5:
+            mdes = "Consumo de CPU alto por un tiempo considerable"
+            f = True
+        if  media >= vn + 8:
+            mdes = "Consumo de CPU muy alto por un largo periodo de tiempo"
+            f = True
 
         #Detalles de Consumo
-        detalles = "--------------NOTIFICACION CPU---------------"+"\nDispositivo: "+str(disp)+"\n"+mdes+"\nPromedio: " +str(media)[:5]+ "\nMediana:"+str(mediana)[:5]+"\nDesviación: "+str(desviacion)[:5]+"\nVal. Max:"+str(pico)[:5]+"\n---------------------------------------------------------------"
+        detalles = "--------------NOTIFICACION CPU---------------"+"\nDispositivo: "+str(disp)+"\n"+mdes+" - "+mvar+"\nPromedio: " +str(media)[:5]+ "\nMediana:"+str(mediana)[:5]+"\nDesviación: "+str(desviacion)[:5]+"\nVal. Max:"+str(pico)[:5]+"\n---------------------------------------------------------------"
         if f == True:
             teleg.enviar_mensaje(detalles)
 
@@ -108,4 +122,4 @@ while True:
     print("Monitoreando CPU")
     datacpu = obt_cpudata(direc)
     warning_cpu(cpuvalref,datacpu)
-    time.sleep((cputime+10)*60) #Configurado para 30 minutos
+    time.sleep((cputime+0.5)*60) #Configurado para 30 minutos

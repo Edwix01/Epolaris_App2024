@@ -13,6 +13,7 @@ config_file = current_dir+'/configuracion/configuracion_monitoreo.json'
 config = obt_infyam.read_config(config_file)
 time_logs = config.get('wartiempologs', 10)  
 num_logs = config.get('warnumlogs', 10)  
+servidor_logs = config.get('servidor_logs', "9.9.9.9") 
 
 # Configurar la conexión a la base de datos InfluxDB
 client = InfluxDBClient(host='127.0.0.1', port=8086, database='influx')
