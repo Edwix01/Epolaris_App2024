@@ -13,6 +13,7 @@ config_file = current_dir+'/configuracion/configuracion_monitoreo.json'
 config = obt_infyam.read_config(config_file)
 time_logs = config.get('wartiempologs', 10)  
 num_logs = config.get('warnumlogs', 10)  
+servidor_logs = config.get('servidor_logs', "9.9.9.9")  
 
 # Configurar la conexión a la base de datos InfluxDB
 client = InfluxDBClient(host='127.0.0.1', port=8086, database='influx')
@@ -68,19 +69,18 @@ def procesar_dispositivos_logs(datos_yaml,di_ip):
         user = datos_yaml[grupo]['vars']['usuario']
         password = datos_yaml[grupo]['vars']['contrasena']
         device_type = datos_yaml[grupo]['vars']['device_type']
-        servidordelogs = "10.0.1.10"
         trap = "7"
 
         ip = di_ip
         try:
             if marca in ['3COM', 'HPV1910']:
                 # Usar Paramiko para dispositivos 3Com - HPV1910
-                config_logs.configurar_logs_3com(ip, user, password, servidordelogs, save_config=True)
+                config_logs.configurar_logs_3com(ip, user, password, servidor_logs, save_config=True)
 
             elif marca == 'TPLINK':
-                archivo = config_logs.comandos_logs_tplink(servidordelogs, trap)
+                archivo = config_logs.comandos_logs_tplink(servidor_logs, trap)
                 conexion_ssh.epmiko(user, password, ip, archivo)
-                print(f"Configuración de logs completada exitosamente para el servidor {servidordelogs}.")
+                print(f"Configuración de logs completada exitosamente para el servidor {servidor_logs}.")
 
             else:
                 # Para Cisco y HPv1910, se utiliza Netmiko
@@ -95,10 +95,10 @@ def procesar_dispositivos_logs(datos_yaml,di_ip):
 
                 if connection:
                     if marca == 'CISCO':
-                        config_logs.configurar_logs_cisco(connection, servidordelogs, trap, save_config=False)
+                        config_logs.configurar_logs_cisco(connection, servidor_logs, trap, save_config=False)
 
                     elif marca == 'HPA5120':
-                        config_logs.configurar_logs_hp(connection, servidordelogs, save_config=False)
+                        config_logs.configurar_logs_hp(connection, servidor_logs, save_config=False)
                     connection.disconnect()
         except Exception as e:
             print(f"Error al configurar el dispositivo {ip}: {e}")
@@ -116,8 +116,8 @@ def prevención_corte_logs(direc):
     Returns:
     Advertencia - Mensaje enviado por telegram
     """
-    base_path = "/home/edwin/Documents/Prototipo_App2024/Simulación/epopsSimulacion/inventarios"
-    archivo = os.path.join(base_path, "dispositivos.yaml")
+    current_dir = os.path.dirname(__file__)
+    archivo = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
     datos_yaml = read_yaml.cargar_datos_snmp(archivo)
     interrupciones = leer_incidencias(direc)
     #Generar Advertencia
@@ -125,11 +125,19 @@ def prevención_corte_logs(direc):
     tail = "-"*len(cabecera)
     mesf = ""
     for disp in direc:
-        if  interrupciones[disp] >= num_logs:
-            mesf = (cabecera+"\nMúltiples Interrupciones en: "+disp+"\nSe ha levantado el servicio de logs\n"+tail)
-            procesar_dispositivos_logs(datos_yaml,disp)
-            print(mesf)
-            teleg.enviar_mensaje(mesf)
+        try:
+            if interrupciones[disp] >= num_logs:
+                mesf = (cabecera + "\nMúltiples Interrupciones en: " + disp + "\nSe ha levantado el servicio de logs\n" + tail)
+                procesar_dispositivos_logs(datos_yaml, disp)
+                print(mesf)
+                teleg.enviar_mensaje(mesf)
+        except KeyError as e:
+            print(f"Error: Dispositivo {disp} no encontrado en interrupciones. Detalles: {e}")
+        except TypeError as e:
+            print(f"Error: Tipo de dato incorrecto. Detalles: {e}")
+        except Exception as e:
+            print(f"Ocurrió un error inesperado. Detalles: {e}")
+
 
 current_dir = os.path.dirname(__file__)
 nombreyaml = os.path.join(current_dir, 'inventarios', 'dispositivos.yaml')
