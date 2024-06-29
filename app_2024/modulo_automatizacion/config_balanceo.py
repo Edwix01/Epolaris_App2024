@@ -162,8 +162,8 @@ def comandos_balanceo_tplink(vlan_id, interfaz, archivo_destino=None):
 
     # Ruta predeterminada si no se especifica una
     if archivo_destino is None:
-        #archivo_destino = '/home/paola/Documentos/app2024/modulo_automatizacion/comandos/comandos_balanceo.txt'
         archivo_destino = os.path.join(current_dir, 'comandos', 'comandos_balanceo.txt')
+    
     comandos = dedent(f"""
         configure
         vlan {vlan_id}
