@@ -240,6 +240,42 @@ function stp(req, res) {
         res.json({ success: true, message: 'Script ejecutado correctamente', output: stdout });
     });
   }
+
+function stop_app(req, res) {
+  if (req.session.loggedin) {
+      res.render('epops/stop_app', { name: req.session.name });
+  } else {
+      res.redirect('/');
+  }
+}
+
+function stop(req, res) {
+  // Verificar si el usuario está logueado
+  if (!req.session.loggedin) {
+      // Redirigir y terminar la ejecución inmediatamente después
+      return res.redirect('/');
+  }
+
+  // Definir la ruta del script
+  const scriptPath = '/home/du/Prototipo_App2024/app_2024/src/inicializacion/epolaris_stop_sistema.sh';
+  
+  // Ejecutar el script
+  exec(`bash ${scriptPath}`, (error, stdout, stderr) => {
+      if (error) {
+          console.error(`Error al ejecutar el script: ${stderr}`);
+          return res.status(500).json({ success: false, message: 'Error al ejecutar el script', error: stderr });
+      }
+      
+      // Comprobar de nuevo el estado de la sesión antes de enviar la respuesta
+      if (!req.session.loggedin) {
+          console.error('La sesión ha expirado antes de completar el script');
+          return res.status(403).json({ success: false, message: 'Sesión expirada' });
+      }
+
+      console.log(`Script ejecutado correctamente: ${stdout}`);
+      res.json({ success: true, message: 'Script ejecutado correctamente', output: stdout });
+  });
+}
      
 module.exports = {
   snmp: snmp,
@@ -255,4 +291,6 @@ module.exports = {
   cargarArchivo: cargarArchivo,
   procesarBalanceo: procesarBalanceo,
   ejecutarBalanceo: ejecutarBalanceo,
+  stop:stop,
+  stop_app:stop_app,
 }
