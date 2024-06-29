@@ -67,8 +67,6 @@ def procesar_dispositivos_vlan(datos_yaml):
             except Exception as e:
                 print(f"Error al configurar el dispositivo {ip}: {e}")
 
-#base_path = "/home/paola/Documentos/app2024/modulo_automatizacion/registros"
-#archivo = os.path.join(base_path, "datos_vlan.yaml")
 current_dir = os.path.dirname(__file__)
 archivo = os.path.join(current_dir, 'registros', 'datos_vlan.yaml')
 datos_yaml = read_yaml.cargar_datos_yaml(archivo)
