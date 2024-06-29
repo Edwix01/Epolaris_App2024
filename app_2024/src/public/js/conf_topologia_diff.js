@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     props: {
                         'class': 'sourcelabel',
                         'alignment-baseline': 'text-after-edge',
-                        'text-anchor': 'start'
+                        'text-anchor': 'start',
+                        'style': 'font-size: 8px',
                     }
                 }, {
                     name: 'target',
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         'class': 'targetlabel',
                         'alignment-baseline': 'text-after-edge',
                         'text-anchor': 'end'
+                        'style': 'font-size: 8px',
                     }
                 });
                 return view;
