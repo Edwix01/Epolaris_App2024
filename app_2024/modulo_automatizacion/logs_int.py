@@ -66,7 +66,5 @@ def procesar_dispositivos_logs(datos_yaml):
 
 current_dir = os.path.dirname(__file__)
 archivo = os.path.join(current_dir, 'registros', 'datos_logs.yaml')
-#base_path = "/home/paola/Documentos/app2024/modulo_automatizacion/registros"
-#archivo = os.path.join(base_path, "datos_logs.yaml")
 datos_yaml = read_yaml.cargar_datos_yaml(archivo)
 procesar_dispositivos_logs(datos_yaml)
