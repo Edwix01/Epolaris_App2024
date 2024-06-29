@@ -30,7 +30,6 @@ router.post('/upload', AutoController.uploadYAML, AutoController.uploadYAMLFile)
 
 
 //RUTA PARA VISUALIZAR TOPOLOGIA
-//router.get('/topologia', TopoController.topo_ini);
 router.get('/topologia', TopoController.chageDetect);
 router.post('/topologia', TopoController.update_Topology)
 router.get('/check-change', TopoController.checkChange);
@@ -67,8 +66,12 @@ router.get('/logs', OperaController.logs);
 router.post('/logs', AutoController.guardarDispositivo);
 
 //RUTA PARA INICAR LA APP
-
 router.get('/start_app', OperaController.start_app);
-router.get('/run_script', OperaController.run_script);  
+router.get('/run_script', OperaController.run_script);
+
+//RUTA PARA DETENER LA APP
+router.get('/stop_app', OperaController.stop_app);
+router.get('/stop_algoritmo', OperaController.stop);  
+
 
 module.exports = router;
