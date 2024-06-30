@@ -11,11 +11,13 @@ const loginRoutes = require('./routes/login');
 const multer = require('multer');
 const app = express();
 
+const currentDir = __dirname;
+
 const PUERTO = 443;
 
 https.createServer({
-    key: fs.readFileSync('/home/du/Prototipo_App2024/app_2024/http/key.pem'),
-    cert: fs.readFileSync('/home/du/Prototipo_App2024/app_2024/http/cert.pem'),
+    key: fs.readFileSync(path.join(currentDir, 'http/localhost.key')),
+    cert: fs.readFileSync(path.join(currentDir, 'http/localhost.crt'))
 }, app).listen(PUERTO, function(){
     console.log('Escuchando en el puerto 443');
 });
