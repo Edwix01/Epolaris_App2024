@@ -61,15 +61,15 @@
             updateLastReloadTime(); // Actualizar al cargar la página
             setInterval(function() {
                 window.location.href = window.location.href; // Forzar recarga desde el servidor
-            }, 60000); // 60000 milisegundos = 1 minuto
+            }, 120000); // 120000 milisegundos = 2 minutos
         }
 
     </script>
 
     <div class="controls-container">
         <div class="button-row">
-            <button onclick="horizontal()">Horizontal layout</button>
-            <button onclick="vertical()">Vertical layout</button>
+            <button onclick="horizontal()">Diseño Horizontal</button>
+            <button onclick="vertical()">Diseño Vertical</button>
             <button id="toggleLabelsButton">Interfaces</button>
             <form action="/topologia" method="post">
                 <button type="submit">Confirmar Cambios</button>
