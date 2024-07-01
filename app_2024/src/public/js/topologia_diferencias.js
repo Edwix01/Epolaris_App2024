@@ -193,9 +193,9 @@ var topologyData = {
             "port_blokt": false,
             "source": 7,
             "srcDevice": "10.0.1.8",
-            "srcIfName": "G1/0/33",
+            "srcIfName": "G1/0/37",
             "target": 12,
-            "tgtDevice": "10.0.1.15",
+            "tgtDevice": "10.0.1.17",
             "tgtIfName": "G1/0/1"
         },
         {
@@ -207,10 +207,10 @@ var topologyData = {
             "port_blokt": false,
             "source": 7,
             "srcDevice": "10.0.1.8",
-            "srcIfName": "G1/0/37",
-            "target": 13,
-            "tgtDevice": "10.0.1.17",
-            "tgtIfName": "G1/0/1"
+            "srcIfName": "G1/0/39",
+            "target": 15,
+            "tgtDevice": "10.0.1.13",
+            "tgtIfName": "g1/0/24"
         },
         {
             "id": 15,
@@ -221,9 +221,9 @@ var topologyData = {
             "port_blokt": false,
             "source": 7,
             "srcDevice": "10.0.1.8",
-            "srcIfName": "G1/0/39",
+            "srcIfName": "G1/0/17",
             "target": 16,
-            "tgtDevice": "10.0.1.13",
+            "tgtDevice": "10.0.1.14",
             "tgtIfName": "g1/0/24"
         },
         {
@@ -233,12 +233,12 @@ var topologyData = {
             "is_new": "no",
             "port_bloks": false,
             "port_blokt": false,
-            "source": 7,
-            "srcDevice": "10.0.1.8",
-            "srcIfName": "G1/0/17",
-            "target": 17,
-            "tgtDevice": "10.0.1.14",
-            "tgtIfName": "g1/0/24"
+            "source": 12,
+            "srcDevice": "10.0.1.17",
+            "srcIfName": "G1/0/2",
+            "target": 13,
+            "tgtDevice": "10.0.1.18",
+            "tgtIfName": "G1/0/16"
         },
         {
             "id": 17,
@@ -248,23 +248,9 @@ var topologyData = {
             "port_bloks": false,
             "port_blokt": false,
             "source": 13,
-            "srcDevice": "10.0.1.17",
-            "srcIfName": "G1/0/2",
-            "target": 14,
-            "tgtDevice": "10.0.1.18",
-            "tgtIfName": "G1/0/16"
-        },
-        {
-            "id": 18,
-            "index": 1,
-            "is_dead": "no",
-            "is_new": "no",
-            "port_bloks": false,
-            "port_blokt": false,
-            "source": 14,
             "srcDevice": "10.0.1.18",
             "srcIfName": "G1/0/2",
-            "target": 15,
+            "target": 14,
             "tgtDevice": "10.0.1.19",
             "tgtIfName": "G1/0/5"
         }
@@ -391,19 +377,9 @@ var topologyData = {
             "name": "SWME-COMITE-SE2_3C2920"
         },
         {
-            "IP": "10.0.1.15",
-            "icon": "switch",
-            "id": 12,
-            "is_dead": "no",
-            "is_new": "no",
-            "layerSortPreference": 3,
-            "marca": "3COM-BASELINE",
-            "name": "SW_ME_REP"
-        },
-        {
             "IP": "10.0.1.17",
             "icon": "switch",
-            "id": 13,
+            "id": 12,
             "is_dead": "no",
             "is_new": "no",
             "layerSortPreference": 3,
@@ -413,7 +389,7 @@ var topologyData = {
         {
             "IP": "10.0.1.18",
             "icon": "switch",
-            "id": 14,
+            "id": 13,
             "is_dead": "no",
             "is_new": "no",
             "layerSortPreference": 4,
@@ -423,7 +399,7 @@ var topologyData = {
         {
             "IP": "10.0.1.19",
             "icon": "switch",
-            "id": 15,
+            "id": 14,
             "is_dead": "no",
             "is_new": "no",
             "layerSortPreference": 5,
@@ -433,7 +409,7 @@ var topologyData = {
         {
             "IP": "10.0.1.13",
             "icon": "switch",
-            "id": 16,
+            "id": 15,
             "is_dead": "no",
             "is_new": "no",
             "layerSortPreference": 3,
@@ -443,7 +419,7 @@ var topologyData = {
         {
             "IP": "10.0.1.14",
             "icon": "switch",
-            "id": 17,
+            "id": 16,
             "is_dead": "no",
             "is_new": "no",
             "layerSortPreference": 3,

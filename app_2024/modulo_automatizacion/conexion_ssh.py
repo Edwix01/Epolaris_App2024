@@ -1,6 +1,7 @@
 from netmiko import ConnectHandler
 import time
 import subprocess
+import os
 import paramiko
 #********************************************************************************************
 #------------------------------------- CONEXIONES SSH ---------------------------------------
@@ -136,8 +137,17 @@ def epmiko(user, password, host, comandos):
     if None in [user, password, host, comandos]:
         raise ValueError(f"Uno de los argumentos de epmiko es None - usuario: {user}, contraseña: {password}, host: {host}, comandos: {comandos}")
     
+    
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+   # Construir la ruta al archivo tplink_auto.sh de manera relativa desde el directorio actual
+    script_path = os.path.join(current_dir, 'tplink_auto.sh')
+
+    # Verificar si el archivo existe
+    if not os.path.exists(script_path):
+        raise FileNotFoundError(f"No se encontró el archivo tplink_auto.sh en la ruta: {script_path}")
+
     # Formar la lista de argumentos para el comando
-    args = ['./tplink_auto.sh', user, password, host, comandos]
+    args = [script_path, user, password, host, comandos]
 
     # Intentar ejecutar el script externo y manejar excepciones
     try:

@@ -1,2 +1,3 @@
 configure
-snmp-server community prueba1 read-only
+snmp-server community epolaris read-only
+exit

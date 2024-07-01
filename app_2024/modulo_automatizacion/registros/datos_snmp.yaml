@@ -1,10 +1,12 @@
 datos_snmp:
   hosts:
     switch1:
-      host: 10.0.1.25
+      host: 10.0.1.13
   vars:
-    marca: 3COM
-    comunidad: jjhjg
+    marca: TPLINK
+    comunidad: epolaris
+    permisos: read-only
+    id_list: SN
     device_type: none
-    usuario: hgjgh
-    contrasena: dfs
+    usuario: networking
+    contrasena: Ygvfe34a.2018
