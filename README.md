@@ -15,7 +15,6 @@ Epolaris es un sistema avanzado de gestión y automatización de redes WAN que i
 
 *Configuración*: Permite cargar inicialmente las credenciales y características de los dispositivos que conforman la red.
 
-Con Epolaris, la gestión de redes WAN se vuelve más eficiente y efectiva, proporcionando una vista integral y herramientas prácticas para mantener el rendimiento y la seguridad de la red.
 
 
 
