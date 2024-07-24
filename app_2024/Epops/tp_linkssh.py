@@ -20,10 +20,14 @@ def tplink_id(b_root, data_stp ,br_idtp,iptp):
                data_stp[i][0][i_c] = br_idtp[i]
             except ValueError as e:
                print(f"Error: {e}")
+            except KeyError as e:
+               print(f"Error de clave: {e}")
         else:
             try:
                i_c = data_stp[i][0].index(b_root)
                data_stp[i][0][i_c] = "11111111"
             except ValueError as e:
                print(f"Error: {e}")
+            except KeyError as e:
+               print(f"Error de clave: {e}")  
     return data_stp
