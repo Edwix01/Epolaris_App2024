@@ -1,5 +1,5 @@
 #!/bin/bash
-
-echo "PARANDO APLICACION"
+python3 stop_app.py
+echo "Aplicación detenida"
 
 
