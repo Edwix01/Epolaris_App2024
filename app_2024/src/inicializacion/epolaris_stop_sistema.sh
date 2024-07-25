@@ -11,7 +11,7 @@ fi
 echo "Directorio encontrado: $DIRECTORIO_BASE"
 # Cambiar al directorio encontrado
 cd "$DIRECTORIO_BASE" || { echo "Error al cambiar al directorio $DIRECTORIO_BASE"; exit 1; }
-python3 stop_app.py
+sudo python3 stop_app.py
 echo "Aplicación detenida"
 
 
