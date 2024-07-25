@@ -1,7 +1,7 @@
 def tplink_id(b_root, data_stp ,br_idtp,iptp):
     """
     Permite intercambiar los datos del diccionario con la información de STP
-    para todos los dispositivos TpLink.
+    para todos los dispositivos TPLink.
 
     Parameters:
     b_root(str):     ID del BridgeRoot(Necesario puesto que se intercambiara por un nuevo BridgeID)
