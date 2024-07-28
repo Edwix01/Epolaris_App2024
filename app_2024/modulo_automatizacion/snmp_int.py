@@ -37,9 +37,9 @@ def procesar_dispositivos_snmp(datos_yaml):
                 if marca in ['3COM', 'HPV1910']:  
                     # Configuración para dispositivos 3Com - HPV1910 usando Paramiko
                     if id_list == "SN":
-                        config_snmp.configurar_snmp_3com(ip, user, password, community, permiso, save_config=True)
+                        config_snmp.configurar_snmp_3com(ip, user, password, community, permiso, save_config=False)
                     else:
-                        config_snmp.configurar_snmp_acl_3com(ip, user, password, community, permiso, id_list, save_config=True)
+                        config_snmp.configurar_snmp_acl_3com(ip, user, password, community, permiso, id_list, save_config=False)
                     
                 elif marca == 'TPLINK':
                     # Configuración para dispositivos TPLINK usando un script SSH
@@ -61,14 +61,14 @@ def procesar_dispositivos_snmp(datos_yaml):
                     if connection:
                         if marca == 'CISCO':
                             if id_list == "SN":
-                                config_snmp.configurar_snmp_cisco(connection, community, permiso, save_config=True)
+                                config_snmp.configurar_snmp_cisco(connection, community, permiso, save_config=False)
                             else:
-                                config_snmp.configurar_snmp_acl_cisco(connection, community, permiso, id_list, save_config=True)
+                                config_snmp.configurar_snmp_acl_cisco(connection, community, permiso, id_list, save_config=False)
                         elif marca == 'HPA5120':
                             if id_list == "SN":
-                                config_snmp.configurar_snmp_hp(connection, community, permiso, save_config=True)
+                                config_snmp.configurar_snmp_hp(connection, community, permiso, save_config=False)
                             else:
-                                config_snmp.configurar_snmp_acl_hp(connection, community, permiso, id_list, save_config=True)
+                                config_snmp.configurar_snmp_acl_hp(connection, community, permiso, id_list, save_config=False)
                         connection.disconnect()
             except Exception as e:
                 print(f"Error al configurar el dispositivo {ip}: {e}")
