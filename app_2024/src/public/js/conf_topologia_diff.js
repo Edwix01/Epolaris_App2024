@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-
     (function (nx) {
         var showLabels = false; // Controla la visibilidad de las etiquetas
         // Define CustomLinkClass
@@ -27,14 +26,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     props: {
                         'class': 'targetlabel',
                         'alignment-baseline': 'text-after-edge',
-                        'text-anchor': 'end'
+                        'text-anchor': 'end', // Coma agregada aquí
                         'style': 'font-size: 8px',
                     }
                 });
                 return view;
             },
-
-
             methods: {
                 update: function() {
                     this.inherited();
@@ -42,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     var angle = line.angle();
                     var stageScale = this.stageScale();
                     var index = this.model().get('index');
-                    // Determina el color basado en si el puerto esta bloqueado
+                    // Determina el color basado en si el puerto está bloqueado
                     var colorSourcelabel = this.model().get('port_bloks') === true ? 'red' : 'black';
                     var colorTargetlabel = this.model().get('port_blokt') === true ? 'red' : 'black';
 
@@ -151,8 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        
-
         var currentLayout = 'auto'
 
         horizontal = function() {
@@ -181,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
             topo.activateLayout('hierarchicalLayout');
         }
 
-        
         // Initialize topology
         var topo = new nx.graphic.Topology({
             width: 1500,
